@@ -2,7 +2,8 @@
 {% block content %}
 <div class="top-container">
     <div class="panel" style="border-color: {{ FONT_COLOR }};">
-        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">{{ shop_name }}</div>
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">{{ shop_name }}
+        </div>
         <div class="panel-body">
             <p style="font-size:0.8rem;">持有金: {{ char.gold }}G {% if discount > 0 %}| 折扣: {{ discount }}%{% endif %}</p>
             <h4 style="font-size:0.85rem;">商品一覽</h4>
@@ -14,6 +15,7 @@
                             <tr>
                                 <th class="radio-col"></th>
                                 <th>名稱</th>
+                                <th>附加功能</th>
                                 <th class="num">威力</th>
                                 <th class="num">重量</th>
                                 <th class="num">價格</th>
@@ -25,6 +27,11 @@
                             <tr>
                                 <td class="radio-col"><input type="radio" name="equip_id" value="{{ item.id }}"></td>
                                 <td>{{ item.name }}</td>
+                                <td style="font-size:0.75rem; color:#14015b;">
+                                    {% if item.ability and item.ability|int in abilities_map %}
+                                    {{ abilities_map[item.ability|int] }}
+                                    {% endif %}
+                                </td>
                                 <td class="num">{{ item.power }}</td>
                                 <td class="num">{{ item.weight }}</td>
                                 <td class="num">
@@ -53,6 +60,7 @@
                             <tr>
                                 <th class="radio-col"></th>
                                 <th>名稱</th>
+                                <th>附加功能</th>
                                 <th class="num">威力</th>
                                 <th class="num">售價</th>
                             </tr>
@@ -62,6 +70,11 @@
                             <tr>
                                 <td class="radio-col"><input type="radio" name="item_id" value="{{ item.id }}"></td>
                                 <td>{{ item.name }}</td>
+                                <td style="font-size:0.75rem; color:#ffd700;">
+                                    {% if item.ability and item.ability|int in abilities_map %}
+                                    {{ abilities_map[item.ability|int] }}
+                                    {% endif %}
+                                </td>
                                 <td class="num">{{ item.power }}</td>
                                 <td class="num">{{ item.price // 2 }}G</td>
                             </tr>

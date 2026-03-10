@@ -25,7 +25,7 @@ class Config:
     MAX_LOGIN = 50
 
     # 更新間隔（秒）
-    BATTLE_TIME = 60       # 戰鬥
+    BATTLE_TIME = 5       # 戰鬥
     KINGDOM_TIME = 600     # 國政
     MAP_TIME = 1200        # 地圖
     CONV_TIME = 600        # 轉換

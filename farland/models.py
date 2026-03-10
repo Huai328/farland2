@@ -86,6 +86,20 @@ class Character(db.Model):
         parts = (self.job_points or '0,0,0,0,0,0').split(',')
         return [int(p) for p in parts]
 
+    @property
+    def learned_abilities(self):
+        """解析已學習的被動技能 ID 列表"""
+        if not self.flag1:
+            return []
+        return [int(x) for x in self.flag1.split(',') if x.strip('.').isdigit()]
+
+    def add_learned_ability(self, ab_id: int):
+        """新增已學習的被動技能 ID"""
+        current = self.learned_abilities
+        if ab_id not in current:
+            current.append(ab_id)
+            self.flag1 = ','.join(map(str, current))
+
 
 class Town(db.Model):
     """城鎮（對應 data/towndata.cgi）"""

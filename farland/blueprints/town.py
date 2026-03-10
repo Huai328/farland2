@@ -6,7 +6,7 @@ import time
 import random
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
-from farland.models import db, Character, CharacterItem, Equipment, Town, BattleState
+from farland.models import db, Character, CharacterItem, Equipment, Town, BattleState, Ability
 from farland.auth import login_required
 from farland.common import (
     get_town_for_character, get_country, append_game_log,
@@ -110,8 +110,32 @@ def shop_view(char):
     category_map = {'arm': 'weapon', 'pro': 'armor', 'acc': 'accessory', 'item': 'item'}
     category = category_map.get(mode, 'weapon')
 
-    # 商品一覽（篩選：城鎮發展度）
-    shop_items = Equipment.query.filter_by(category=category).all()
+    # 城鎮 ID 篩選
+    town_id_str = str(town.id) if town else '0'
+    
+    # 商品一覽
+    # 1. 基本分類篩選
+    # 2. 城鎮篩選 (flag 為 'all' 或等於目前城鎮 ID)
+    query = Equipment.query.filter_by(category=category).filter(
+        db.or_(Equipment.flag == 'all', Equipment.flag == town_id_str)
+    )
+    
+    # 3. 發展度篩選 (威力限制)
+    dev_map = {
+        'weapon': town.weapon_dev if town else 0,
+        'armor': town.armor_dev if town else 0,
+        'accessory': town.acc_dev if town else 0,
+        'item': town.item_dev if town else 0
+    }
+    current_dev = dev_map.get(category, 0)
+    
+    # 限制商品價格/威力的門檻（原始規則：price < (dev+1)*1000 + 5000）
+    # 這裡我們用價格作為發展度限制
+    price_limit = (current_dev + 1) * 30000 + 10000
+    if town.id == 0: # 初始城鎮限制較鬆或特定規則
+        price_limit = max(price_limit, 50000)
+        
+    shop_items = query.filter(Equipment.price <= price_limit).all()
 
     # 折扣計算
     discount = 0
@@ -120,8 +144,27 @@ def shop_view(char):
 
     # 庫存（出售用）
     inventory = get_inventory(char.id)
-
     shop_name = {'arm': '武器店', 'pro': '防具店', 'acc': '飾品店', 'item': '道具店'}
+
+    # 取得能力名稱映射
+    ability_ids = set()
+    for item in shop_items:
+        if item.ability:
+            try:
+                ability_ids.add(int(item.ability))
+            except ValueError:
+                pass
+    for item in inventory:
+        if item.ability:
+            try:
+                ability_ids.add(int(item.ability))
+            except ValueError:
+                pass
+    
+    abilities_map = {}
+    if ability_ids:
+        abilities = Ability.query.filter(Ability.id.in_(list(ability_ids))).all()
+        abilities_map = {ab.id: ab.name for ab in abilities}
 
     return render_template('town/shop.html',
                            char=char, town=town,
@@ -130,7 +173,8 @@ def shop_view(char):
                            category=category,
                            shop_name=shop_name.get(mode, '店'),
                            discount=discount,
-                           mode=mode)
+                           mode=mode,
+                           abilities_map=abilities_map)
 
 
 def buy_action(char):

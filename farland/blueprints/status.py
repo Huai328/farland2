@@ -145,17 +145,45 @@ def change_view(char):
     jobs = JobClass.query.all()
     jp = char.parsed_job_points
 
+    job_type_names = ['武系', '魔系', '神系', '弓系', '體系', '盜系']
+    stat_names = ['力', '體', '智', '信', '敏', '速']
+
     available_jobs = []
     for job in jobs:
         if job.id == char.job_class:
             continue
-        # 門檻檢查（簡化版 — 原始碼要求 6 項 JP + 6 項 stat 門檻）
-        reqs = job.requirements.split(',') if job.requirements else []
+        
+        req_texts = []
+        can_change = True
+
+        # JP Requirements (6 values)
+        if job.requirements:
+            reqs = job.requirements.split(',')
+            for i, val in enumerate(reqs):
+                if i < len(job_type_names) and val and int(val) > 0:
+                    req_texts.append(f"{job_type_names[i]}: {val}")
+                    if i >= len(jp) or jp[i] < int(val):
+                        can_change = False
+        
+        # Stat Requirements (mapped to stat_caps in models, 6 values)
+        if job.stat_caps:
+            caps = job.stat_caps.split(',')
+            char_caps = char.parsed_stat_caps
+            stat_keys = ['max_str', 'max_vit', 'max_int', 'max_fai', 'max_dex', 'max_agi']
+            for i, val in enumerate(caps):
+                if i < len(stat_names) and val and int(val) > 0:
+                    req_texts.append(f"{stat_names[i]}: {val}")
+                    if i >= len(stat_keys) or char_caps.get(stat_keys[i], 0) < int(val):
+                        can_change = False
+                    
+        req_str = ' / '.join(req_texts) if req_texts else '無條件'
+
         available_jobs.append({
             'id': job.id,
             'name': job.name,
             'type': job.base_type,
-            'requirements': job.requirements,
+            'requirements': req_str,
+            'can_change': can_change,
         })
 
     return render_template('status/change.html', char=char,
@@ -179,17 +207,42 @@ def change_action(char):
         flash('無效的職業。')
         return redirect(url_for('status.dispatch', mode='change'))
 
+    # 確認轉職條件
+    can_change = True
+    jp = char.parsed_job_points
+    if job.requirements:
+        reqs = job.requirements.split(',')
+        for i, val in enumerate(reqs):
+            if val and int(val) > 0 and (i >= len(jp) or jp[i] < int(val)):
+                can_change = False
+    
+    if job.stat_caps:
+        caps = job.stat_caps.split(',')
+        char_caps = char.parsed_stat_caps
+        stat_keys = ['max_str', 'max_vit', 'max_int', 'max_fai', 'max_dex', 'max_agi']
+        for i, val in enumerate(caps):
+            if val and int(val) > 0 and i < len(stat_keys) and char_caps.get(stat_keys[i], 0) < int(val):
+                can_change = False
+
+    if not can_change:
+        flash('轉職條件不足。')
+        return redirect(url_for('status.dispatch', mode='change'))
+
     old_name = JOBS.get(char.job_class, '?')
     char.job_class = new_class
     char.job_type = job.base_type
 
-    # 被動技能值重新計算（簡化：隨機微調）
-    char.str_stat = max(30, int(random.random() * char.str_stat / 1.5) + 10)
-    char.vit = max(30, int(random.random() * char.vit / 1.5) + 10)
-    char.int_stat = max(30, int(random.random() * char.int_stat / 1.5) + 10)
-    char.fai = max(30, int(random.random() * char.fai / 1.5) + 10)
-    char.dex = max(30, int(random.random() * char.dex / 1.5) + 10)
-    char.agi = max(30, int(random.random() * char.agi / 1.5) + 10)
+    # 被動技能值重新計算（加入職業補正）
+    from game_data import JOB_LEVEL_BONUS
+    bonus = JOB_LEVEL_BONUS.get(job.base_type, [1, 1, 1, 1, 1, 1])
+    caps = char.parsed_stat_caps
+    
+    char.str_stat = min(caps.get('max_str', 200), max(30, int(random.random() * char.str_stat / 1.5) + 10 + char.level * bonus[0]))
+    char.vit = min(caps.get('max_vit', 200), max(30, int(random.random() * char.vit / 1.5) + 10 + char.level * bonus[1]))
+    char.int_stat = min(caps.get('max_int', 200), max(30, int(random.random() * char.int_stat / 1.5) + 10 + char.level * bonus[2]))
+    char.fai = min(caps.get('max_fai', 200), max(30, int(random.random() * char.fai / 1.5) + 10 + char.level * bonus[3]))
+    char.dex = min(caps.get('max_dex', 200), max(30, int(random.random() * char.dex / 1.5) + 10 + char.level * bonus[4]))
+    char.agi = min(caps.get('max_agi', 200), max(30, int(random.random() * char.agi / 1.5) + 10 + char.level * bonus[5]))
 
     # 重新計算 HP/MP
     char.max_hp = max(50, char.max_hp - random.randint(0, 50))
@@ -210,8 +263,7 @@ def skill_view(char):
     """被動技能的取得 顯示（skill.pl）"""
     all_abilities = Ability.query.all()
     # 已擁有的能力
-    owned_ids = set()
-    # TODO: 從 logfile/ability/ 載入已擁有能力（需要新表或用 flag）
+    owned_ids = set(char.learned_abilities)
     return render_template('status/skill.html', char=char,
                            abilities=all_abilities, owned_ids=owned_ids)
 
@@ -228,11 +280,20 @@ def skill_action(char):
         flash('無效的被動技能。')
         return redirect(url_for('status.dispatch', mode='skill'))
 
+    if char.level < ability.class_req:
+        flash(f'等級不足，需要等級 {ability.class_req}。')
+        return redirect(url_for('status.dispatch', mode='skill'))
+
+    if ab_id in char.learned_abilities:
+        flash('已經學過這個被動技能了。')
+        return redirect(url_for('status.dispatch', mode='skill'))
+
     if char.ability_pts < ability.cost:
         flash('熟練度不足。')
         return redirect(url_for('status.dispatch', mode='skill'))
 
     char.ability_pts -= ability.cost
+    char.add_learned_ability(ab_id)
     db.session.commit()
     flash(f'已習得{ability.name}！')
     return redirect(url_for('status.dispatch', mode='skill'))
@@ -277,7 +338,11 @@ def skill_upgrade(char):
 
 def tec_set_view(char):
     """技能變更 顯示（tec_set.pl）"""
-    all_tecs = Technique.query.all()
+    job_str = str(char.job_class)
+    all_tecs = Technique.query.filter(db.or_(
+        Technique.job_req == 'all',
+        Technique.job_req == job_str
+    )).all()
     tec_parts = (char.technique or '0,0,0,50,50').split(',')
     current = [int(tec_parts[i]) if i < len(tec_parts) else 0 for i in range(5)]
     return render_template('status/tec_set.html', char=char,
@@ -305,7 +370,11 @@ def tec_set_action(char):
 
 def sk_set_view(char):
     """被動技能的變更 顯示（sk_set.pl）"""
-    all_abilities = Ability.query.all()
+    learned = char.learned_abilities
+    if learned:
+        all_abilities = Ability.query.filter(Ability.id.in_(learned)).all()
+    else:
+        all_abilities = []
     skill_ids = [int(s) for s in (char.skills or '0,0').split(',') if s]
     return render_template('status/sk_set.html', char=char,
                            abilities=all_abilities, current=skill_ids)

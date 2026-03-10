@@ -8,9 +8,23 @@
             <form action="{{ url_for('status.dispatch') }}" method="post">
                 <input type="hidden" name="mode" value="skill2">
                 <table style="width:100%; font-size:0.8rem;">
-                    <tr><th></th><th>名稱</th><th>說明</th><th>消耗</th></tr>
+                    <tr><th></th><th>名稱</th><th>說明</th><th>需要等級</th><th>消耗</th></tr>
                     {% for ab in abilities %}
-                    <tr><td><input type="radio" name="ability_id" value="{{ ab.id }}"></td><td>{{ ab.name }}</td><td style="font-size:0.7rem;">{{ ab.description }}</td><td>{{ ab.cost }}</td></tr>
+                    <tr>
+                        <td>
+                            {% if ab.id in owned_ids %}
+                                <span style="color:#888;">已學</span>
+                            {% elif char.level < ab.class_req %}
+                                <span style="color:red;">未達</span>
+                            {% else %}
+                                <input type="radio" name="ability_id" value="{{ ab.id }}">
+                            {% endif %}
+                        </td>
+                        <td {% if ab.id in owned_ids or char.level < ab.class_req %}style="color:#888;"{% endif %}>{{ ab.name }}</td>
+                        <td style="font-size:0.7rem; {% if ab.id in owned_ids or char.level < ab.class_req %}color:#888;{% endif %}">{{ ab.description }}</td>
+                        <td {% if char.level < ab.class_req %}style="color:red;"{% endif %}>{{ ab.class_req }}</td>
+                        <td {% if ab.id in owned_ids or char.level < ab.class_req %}style="color:#888;"{% endif %}>{{ ab.cost }}</td>
+                    </tr>
                     {% endfor %}
                 </table>
                 <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">學習</button>

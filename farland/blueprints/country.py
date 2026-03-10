@@ -145,7 +145,7 @@ def build_action(char):
         flash('該國名已被使用。')
         return redirect(url_for('country.dispatch', mode='build'))
 
-    town = db.session.get(Town, town_id) if town_id else None
+    town = db.session.get(Town, town_id) if town_id is not None else None
     if not town or town.country_id != 0:
         flash('該城無法使用。')
         return redirect(url_for('country.dispatch', mode='build'))

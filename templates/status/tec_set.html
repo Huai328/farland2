@@ -7,7 +7,10 @@
             <form action="{{ url_for('status.dispatch') }}" method="post">
                 <input type="hidden" name="mode" value="tec_set2">
                 <table style="width:100%; font-size:0.8rem;">
-                    <tr><th>欄位</th><th>技能</th></tr>
+                    <tr>
+                        <th>欄位</th>
+                        <th>技能</th>
+                    </tr>
                     {% for i in range(3) %}
                     <tr>
                         <td>技能{{ i + 1 }}</td>
@@ -15,7 +18,9 @@
                             <select name="tec{{ i + 1 }}" style="width:100%;">
                                 <option value="0">（無）</option>
                                 {% for tec in techniques %}
-                                <option value="{{ tec.id }}" {% if tec.id == current[i] %}selected{% endif %}>{{ tec.name }}（{{ tec.element }}屬性 威力量{{ tec.power }} MP{{ tec.mp_cost }}）</option>
+                                <option value="{{ tec.id }}" {% if tec.id==current[i] %}selected{% endif %}>{{ tec.name
+                                    }}（{{ tec.element }}屬性 發動率{{ tec.hit_rate }}% 威力{{ tec.power }} MP{{ tec.mp_cost }}）
+                                </option>
                                 {% endfor %}
                             </select>
                         </td>
@@ -23,11 +28,13 @@
                     {% endfor %}
                     <tr>
                         <td>MP 使用率</td>
-                        <td><input type="number" name="mprate" value="{{ current[3] }}" min="0" max="100" style="width:60px;">%</td>
+                        <td><input type="number" name="mprate" value="{{ current[3] }}" min="0" max="100"
+                                style="width:60px;">%</td>
                     </tr>
                     <tr>
                         <td>HP 危險率</td>
-                        <td><input type="number" name="hprate" value="{{ current[4] }}" min="0" max="100" style="width:60px;">%</td>
+                        <td><input type="number" name="hprate" value="{{ current[4] }}" min="0" max="100"
+                                style="width:60px;">%</td>
                     </tr>
                 </table>
                 <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">變更</button>
