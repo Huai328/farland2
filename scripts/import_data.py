@@ -13,10 +13,10 @@ from farland.models import db, Town, Country, Equipment, Technique, Ability, Mon
 
 # 原始資料目錄
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                        '..', 'data')
+                        'data')
 
 
-def read_file(filename, encoding='shift_jis'):
+def read_file(filename, encoding='utf-8'):
     """讀取 Shift_JIS 編碼的檔案"""
     filepath = os.path.join(DATA_DIR, filename)
     if not os.path.exists(filepath):

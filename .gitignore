@@ -3,3 +3,9 @@
 __pycache__/
 .DS_Store
 farland2.db
+.ccb
+logs/
+data/knowledge-graph.db
+data/knowledge-graph.db-shm
+data/knowledge-graph.db-wal
+Thumbs.db
