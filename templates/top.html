@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    {# 在線玩家 #}
+    <div class="panel online-panel" style="border-color: {{ ELEMENT_BG[country.element if country else 0] }};">
+        <div class="panel-header" style="background-color: {{ ELEMENT_BG[country.element if country else 0] }};">
+            <span style="color: #fff; font-size: 0.8rem;">參加者（{{ guests|length }}人）</span>
+        </div>
+        <div class="panel-body guest-list">
+            {% for g in guests %}
+            <span style="color: {{ ELEMENT_BG[g.element] }};">●{{ g.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# 國家指令 #}
+    {% if country %}
+    <div class="panel country-order" style="border-color: {{ ELEMENT_BG[country.element] }};">
+        <div class="panel-header"
+            style="background-color: {{ ELEMENT_BG[country.element] }}; color: {{ ELEMENT_FG[country.element] }};">
+            {{ country.name }}國王的指令
+        </div>
+        <div class="panel-body"
+            style="background-color: {{ ELEMENT_FG[country.element] }}; color: {{ ELEMENT_BG[country.element] }};">
+            {{ country.message or '（無）' }}
+        </div>
+    </div>
+    {% endif %}
+
+    {# 主操作面板 #}
+    <div class="main-panel">
+        {# 狀態與指令 #}
+        <div class="panel status-panel" style="border-color: {{ ELEMENT_BG[country.element if country else 0] }};">
+            <div class="panel-header"
+                style="background-color: {{ ELEMENT_BG[country.element if country else 0] }}; color: {{ ELEMENT_FG[country.element if country else 0] }};">
+                <span>狀態</span>
+                <span>指令</span>
+                {% if remaining_time > 0 %}
+                <span class="timer" data-remaining="{{ remaining_time }}">距下次行動還有 {{ remaining_time }}秒</span>
+                {% else %}
+                <span style="color: {{ ELEMENT_FG[country.element if country else 0] }};">可行動</span>
+                {% endif %}
+                <a href="{{ url_for('main.top') }}" class="btn btn-small"
+                    style="background-color: {{ ELEMENT_FG[country.element if country else 0] }}; color: {{ ELEMENT_BG[country.element if country else 0] }};">重新整理</a>
+            </div>
+
+            <div class="command-grid" style="background-color: {{ ELEMENT_FG[char.element] }};">
+                {# 角色圖片 + 狀態 #}
+                <div class="char-portrait">
+                    <img src="{{ url_for('static', filename='img/chara/' ~ char.chara_img ~ '.gif') }}"
+                        alt="{{ char.name }}">
+                </div>
+
+                <div class="stat-grid">
+                    {# 第1行：LV, 屬性, 單獨戰鬥 #}
+                    <div class="stat-row">
+                        <div class="stat-pair">
+                            <span class="stat-label">LV</span>
+                            <span class="stat-value">{{ char.level }}</span>
+                        </div>
+                        <div class="stat-pair">
+                            <span class="stat-label">屬性</span>
+                            <span class="stat-value">{{ ELEMENTS[char.element] }}</span>
+                        </div>
+                        <div class="command-cell">
+                            <form action="{{ url_for('main.top') }}" method="post" class="inline-form">
+                                <span class="cmd-label">單獨・戰鬥</span>
+                                <select name="mode">
+                                    {% for did, dname in hidden_dungeons %}
+                                    <option value="{{ did }}">{{ dname }}</option>
+                                    {% endfor %}
+                                    <option value="1">{{ town.name if town else '?' }}平原</option>
+                                    <option value="2">{{ town.name if town else '?' }}荒地</option>
+                                    <option value="3">{{ town.name if town else '?' }}之森</option>
+                                    <option value="4">{{ town.name if town else '?' }}之洞</option>
+                                    <option value="">===============</option>
+                                    <option value="kunren">訓練</option>
+                                    <option value="toubatsu">討伐</option>
+                                </select>
+                                <button type="submit" class="btn btn-small">執行</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {# 第2行：HP, 職業, 城鎮設施 #}
+                    <div class="stat-row">
+                        <div class="stat-pair">
+                            <span class="stat-label">HP</span>
+                            <span class="stat-value">{{ char.hp }}/{{ char.max_hp }}</span>
+                        </div>
+                        <div class="stat-pair">
+                            <span class="stat-label">職業</span>
+                            <span class="stat-value">{{ JOBS[char.job_class] }}</span>
+                        </div>
+                        <div class="command-cell">
+                            <form action="{{ url_for('main.top') }}" method="post" class="inline-form">
+                                <span class="cmd-label">城鎮設施</span>
+                                <select name="mode">
+                                    <option value="inn">旅店</option>
+                                    <option value="arm">武器店</option>
+                                    <option value="pro">防具</option>
+                                    <option value="acc">飾品店</option>
+                                    <option value="item">道具店</option>
+                                    <option value="bank">銀行</option>
+                                    <option value="arena">練武場</option>
+                                    <option value="hinn">高級旅館</option>
+                                    <option value="fshop">拍賣場</option>
+                                    <option value="battle_entry">冠軍武鬥會</option>
+                                </select>
+                                <button type="submit" class="btn btn-small">執行</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {# 第3行：MP, 熟練度, 狀態 #}
+                    <div class="stat-row">
+                        <div class="stat-pair">
+                            <span class="stat-label">MP</span>
+                            <span class="stat-value">{{ char.mp }}/{{ char.max_mp }}</span>
+                        </div>
+                        <div class="stat-pair">
+                            <span class="stat-label">熟練度</span>
+                            <span class="stat-value">{{ char.ability_pts }}</span>
+                        </div>
+                        <div class="command-cell">
+                            <form action="{{ url_for('main.top') }}" method="post" class="inline-form">
+                                <span class="cmd-label">角色確認・變更</span>
+                                <select name="mode">
+                                    <option value="status">狀態確認</option>
+                                    <option value="equip">道具使用/裝備</option>
+                                    <option value="">==== 通訊 ====</option>
+                                    <option value="money_send">匯款</option>
+                                    <option value="item_send">寄送道具</option>
+                                    <option value="">==== 技能・被動技能 ====</option>
+                                    <option value="tec_set">技能變更</option>
+                                    <option value="sk_set">被動技能變更</option>
+                                    <option value="skill">被動技能取得/修行</option>
+                                    <option value="">==== 職業 ====</option>
+                                    <option value="change">職業變更</option>
+                                    <option value="getabp">熟練度取得</option>
+                                    <option value="">==== 煉金 ====</option>
+                                    <option value="renkin">道具製作</option>
+                                    <option value="">==== 自訂 ====</option>
+                                    <option value="data_change">圖示變更</option>
+                                    <option value="prof_edit">個人簡介變更</option>
+                                    <option value="">==== 其他 ====</option>
+                                    <option value="hero">登錄為傳說英雄</option>
+                                    <option value="backup">備份</option>
+                                    <option value="con_renew">重新整理所屬國籍</option>
+                                </select>
+                                <button type="submit" class="btn btn-small">執行</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {# 第4行：經驗值, 功績, 国政 #}
+                    <div class="stat-row">
+                        <div class="stat-pair">
+                            <span class="stat-label">經驗值</span>
+                            <span class="stat-value">{{ char.exp }}</span>
+                        </div>
+                        <div class="stat-pair">
+                            <span class="stat-label">功績</span>
+                            <span class="stat-value">{{ char.country_exp }}</span>
+                        </div>
+                        <div class="command-cell">
+                            <form action="{{ url_for('main.top') }}" method="post" class="inline-form">
+                                <span class="cmd-label">社群・國政</span>
+                                <select name="mode">
+                                    <option value="all_conv">全體談話</option>
+                                    <option value="con_conv">{{ country.name if country else '無所屬' }}國談話</option>
+                                    <option value="all_rule">全體規則</option>
+                                    <option value="rule">{{ country.name if country else '' }}國規則</option>
+                                    <option value="king_conv">王室會議</option>
+                                    <option value="">====== 國政 ======</option>
+                                    <option value="money_get">回收稅收</option>
+                                    <option value="suport_money">國家匯款</option>
+                                    <option value="town_up">城鎮開發</option>
+                                    <option value="ram_up">城牆強化</option>
+                                    <option value="ram_down">攻城</option>
+                                    <option value="town_arm">武器・防具開發</option>
+                                    <option value="sirei">指令變更</option>
+                                    <option value="unit">軍事編制</option>
+                                    <option value="">====== 任免・離職 ======</option>
+                                    <option value="king_com">王職任命</option>
+                                    <option value="king_change">王位繼承</option>
+                                    <option value="discharge">除隊</option>
+                                    <option value="">====== 攻城 ======</option>
+                                    <option value="def">城鎮守備</option>
+                                    <option value="def_out">解除守備</option>
+                                    <option value="">======= 獨立 =========</option>
+                                    <option value="con_change">加入國家</option>
+                                    <option value="con_change3">獨立</option>
+                                    <option value="build">建國</option>
+                                </select>
+                                <button type="submit" class="btn btn-small">執行</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {# 第5行：名稱, 持有金, 其他 #}
+                    <div class="stat-row">
+                        <div class="stat-pair">
+                            <span class="stat-label">{{ char.name }}</span>
+                            <span class="stat-value"></span>
+                        </div>
+                        <div class="stat-pair">
+                            <span class="stat-label">持有金/銀行</span>
+                            <span class="stat-value">{{ char.gold }} / {{ char.bank }}</span>
+                        </div>
+                        <div class="command-cell">
+                            <form action="{{ url_for('main.top') }}" method="post" class="inline-form">
+                                <span class="cmd-label">其他</span>
+                                <select name="mode">
+                                    <option value="move">移動</option>
+                                    <option value="inv">攻擊城鎮</option>
+                                    <option value="mode_change">變更顯示模式</option>
+                                </select>
+                                <button type="submit" class="btn btn-small">執行</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 遊戲日誌 #}
+        <div class="log-panel">
+            <div class="log-columns">
+                <div class="log-column">
+                    <div class="panel" style="border-color: {{ ELEMENT_BG[country.element if country else 0] }};">
+                        <div class="panel-header"
+                            style="background-color: {{ ELEMENT_BG[country.element if country else 0] }}; color: {{ ELEMENT_FG[country.element if country else 0] }};">
+                            事件
+                        </div>
+                        <div class="panel-body log-entries">
+                            {% for log in general_logs %}
+                            <p class="log-entry">●{{ log.message }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="log-column">
+                    <div class="panel" style="border-color: {{ ELEMENT_BG[country.element if country else 0] }};">
+                        <div class="panel-header"
+                            style="background-color: {{ ELEMENT_BG[country.element if country else 0] }}; color: {{ ELEMENT_FG[country.element if country else 0] }};">
+                            戰鬥紀錄
+                        </div>
+                        <div class="panel-body log-entries">
+                            {% for log in battle_logs %}
+                            <p class="log-entry">●{{ log.message }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 提示 #}
+        <div class="panel hint-panel">
+            <div class="panel-header" style="background-color: #000; color: #fff;">
+                [提示]
+            </div>
+            <div class="panel-body" style="background-color: #000; color: #fff;">
+                {{ hint }}
+            </div>
+        </div>
+
+        {# CHAT #}
+        <div class="panel chat-panel" style="border-color: {{ FONT_COLOR }};">
+            <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: #ffffcc;">
+                CHAT
+            </div>
+            <div class="panel-body" style="background-color: {{ FONT_COLOR2 }};">
+                <form action="{{ url_for('main.top') }}" method="post" class="chat-form">
+                    <input type="hidden" name="mode" value="chat">
+                    <div class="chat-input-row">
+                        <label>訊息：</label>
+                        <input type="text" name="mes" class="chat-input">
+                        <select name="mes_sel">
+                            <option value="2">{{ country.name if country else '' }}致國民</option>
+                            <option value="1">致全體</option>
+                            <option value="4">致部隊</option>
+                            <option value="3">指定私訊↓</option>
+                        </select>
+                        <button type="submit" class="btn btn-small">傳送</button>
+                    </div>
+                    <div class="chat-input-row">
+                        <label>輸入收件人名稱：</label>
+                        <input type="text" name="aite" size="20">
+                    </div>
+                </form>
+
+                <div class="chat-columns">
+                    <div class="chat-column">
+                        <h4>致全體</h4>
+                        {% for msg in all_messages %}
+                        <div class="chat-message">
+                            <img src="{{ url_for('static', filename='img/chara/' ~ msg.sender_img ~ '.gif') }}"
+                                class="chat-avatar" alt="">
+                            <div class="chat-content">
+                                <strong>{{ msg.sender_name }}</strong>
+                                <p>「{{ msg.body }}」</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <h4>給 {{ char.name }}</h4>
+                        {% for msg in personal_messages %}
+                        <div class="chat-message">
+                            <img src="{{ url_for('static', filename='img/chara/' ~ msg.sender_img ~ '.gif') }}"
+                                class="chat-avatar" alt="">
+                            <div class="chat-content">
+                                <strong>{{ msg.sender_name }}</strong>
+                                <p>「{{ msg.body }}」</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="chat-column">
+                        <h4>給 {{ country.name if country else '' }}國</h4>
+                        {% for msg in country_messages %}
+                        <div class="chat-message">
+                            <img src="{{ url_for('static', filename='img/chara/' ~ msg.sender_img ~ '.gif') }}"
+                                class="chat-avatar" alt="">
+                            <div class="chat-content">
+                                <strong>{{ msg.sender_name }}</strong>
+                                <p>「{{ msg.body }}」</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <h4>致部隊</h4>
+                        {% for msg in unit_messages %}
+                        <div class="chat-message">
+                            <img src="{{ url_for('static', filename='img/chara/' ~ msg.sender_img ~ '.gif') }}"
+                                class="chat-avatar" alt="">
+                            <div class="chat-content">
+                                <strong>{{ msg.sender_name }}</strong>
+                                <p>「{{ msg.body }}」</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if remaining_time > 0 %}
+<script>
+    (function () {
+        const el = document.querySelector('.timer');
+        if (!el) return;
+        let sec = parseInt(el.dataset.remaining);
+        function tick() {
+            if (sec > 0) {
+                el.textContent = '距下次行動還有 ' + sec + '秒';
+                sec--;
+                setTimeout(tick, 1000);
+            } else {
+                el.textContent = '可行動';
+            }
+        }
+        tick();
+    })();
+</script>
+{% endif %}
+{% endblock %}

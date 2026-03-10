@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">家老任命</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ country.name }}國的家老進行任命。（最多 3 名）<br>
+            {% if officials %}目前的家老：{% for o in officials %}{{ o }} {% endfor %}{% endif %}</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="king_com2">
+                {% for i in range(3) %}
+                <div class="form-row">
+                    <label>家老{{ i+1 }}</label>
+                    <select name="slot{{ i+1 }}" style="width:100%; font-size:0.8rem;">
+                        <option value="">-無-</option>
+                        {% for m in members %}
+                        <option value="{{ m.id }}" {% if officials|length > i and officials[i] == m.id %}selected{% endif %}>{{ m.name }}（LV{{ m.level }}）</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">任命</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

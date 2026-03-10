@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">道具製作（煉金）</div>
+        <div class="panel-body">
+            {% if recipes %}
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="renkin2">
+                <table style="width:100%; font-size:0.8rem;">
+                    <tr><th></th><th>配方</th><th>素材</th><th>結果</th></tr>
+                    {% for r in recipes %}
+                    <tr>
+                        <td><input type="radio" name="recipe_id" value="{{ r.id }}"></td>
+                        <td>{{ r.name }}</td>
+                        <td>{{ r.materials }}</td>
+                        <td>{{ r.result }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">製作</button>
+            </form>
+            {% else %}
+            <p style="font-size:0.8rem;">煉金配方準備中。</p>
+            {% endif %}
+            <hr>
+            <h4 style="font-size:0.85rem;">持有道具</h4>
+            <ul style="font-size:0.8rem; list-style:none; padding:0;">
+            {% for item in items %}
+                <li>{{ item.name }}（{{ item.category }}）</li>
+            {% else %}
+                <li>無道具</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

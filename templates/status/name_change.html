@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">神聖聖殿</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">目前的名稱： {{ char.name }}</p>
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="name_change2">
+                <table style="font-size:0.8rem;">
+                    <tr>
+                        <td>新名稱</td>
+                        <td><input type="text" name="name" minlength="2" maxlength="8" required style="width:150px;"></td>
+                    </tr>
+                </table>
+                <p style="font-size:0.7rem; color:#888;">2 至 8 個字元</p>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">改名</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

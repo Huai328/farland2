@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ GAME_TITLE }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/farland.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for msg in messages %}
+        <div class="flash-msg">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <footer class="site-footer">
+        <p>{{ GAME_VERSION }}
+            <a href="http://farland.jellybean.jp/top.htm" target="_blank">bean</a><br>
+            參考：The Wars of Roses Ver6.4
+        </p>
+    </footer>
+</body>
+</html>

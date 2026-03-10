@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: #aa0000;">
+        <div class="panel-header" style="background-color: #aa0000; color: #fff;">
+            清除不活躍玩家
+        </div>
+        <div class="panel-body">
+            {% if inactive %}
+            <p style="color: red;">以下玩家將被刪除（7 天未登入且不足 10 戰）：</p>
+            <ul style="font-size: 0.85rem;">
+                {% for c in inactive %}
+                <li>{{ c.name }}（ID: {{ c.id }}，總戰鬥: {{ c.total_wins }}）</li>
+                {% endfor %}
+            </ul>
+            <form action="{{ url_for('admin.cleanup_inactive_exec') }}" method="post" style="margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary" style="background: #cc0000;">確認刪除 {{ inactive|length }} 人</button>
+            </form>
+            {% else %}
+            <p>目前沒有需要清除的不活躍玩家。</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ url_for('admin.index') }}" class="btn btn-primary">返回管理頁</a>
+</div>
+{% endblock %}

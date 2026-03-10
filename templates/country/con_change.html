@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">加入國家</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">請選擇您想加入的國家。</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="con_change2">
+                <select name="con_id" style="width:100%; font-size:0.8rem;">
+                    <option value="">選擇國家</option>
+                    {% for c in countries %}
+                    <option value="{{ c.id }}">{{ c.name }}（{{ ELEMENTS.get(c.element, '?') }}）</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">加入</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

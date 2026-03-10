@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">武器・防具的開發</div>
+        <div class="panel-body">
+            <div style="display:flex; gap:0.5rem; align-items:flex-start; flex-wrap:wrap;">
+                <img src="{{ url_for('static', filename='img/etc/buki.gif') }}" alt="開發" style="width:64px;">
+                <div style="font-size:0.8rem; flex:1; min-width:200px;">
+                    <p>本城進行武器・防具的開發。<br>請準備開發資金與素材。<br>
+                    屬性與城池元素一致時會變得更強。<br>同一城池最多可開發 3 件。<br>
+                    目前國庫：{{ country.gold }}G</p>
+                </div>
+            </div>
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="town_arm2">
+                <div class="form-row">
+                    <label>裝備</label>
+                    <select name="eqp" style="font-size:0.8rem;">
+                        <option value="t_arm">武器</option>
+                        <option value="t_pro">防具</option>
+                        <option value="t_acc">飾品</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>武器類型（限武器）</label>
+                    <select name="atype" style="font-size:0.8rem;">
+                        <option value="剣">剣</option>
+                        <option value="槍">槍</option>
+                        <option value="杖">杖</option>
+                        <option value="弓">弓</option>
+                        <option value="匕首">匕首</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>名稱</label>
+                    <input type="text" name="name" maxlength="15" style="width:100%;">
+                </div>
+                <div class="form-row">
+                    <label>元素</label>
+                    <select name="ele" style="font-size:0.8rem;">
+                        <option value="">-選擇元素-</option>
+                        {% for eid, ename in ELEMENTS.items() %}
+                        <option value="{{ eid }}">{{ ename }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row" style="display:flex; gap:0.5rem;">
+                    <div>
+                        <label>攻擊</label>
+                        <input type="number" name="dmg" min="50" style="width:60px;"> ×10000G
+                    </div>
+                    <div>
+                        <label>重量</label>
+                        <input type="number" name="wei" min="0" style="width:60px;"> ×10000G
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">開發</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

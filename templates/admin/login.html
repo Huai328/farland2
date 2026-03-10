@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: #aa0000;">
+        <div class="panel-header" style="background-color: #aa0000; color: #fff;">
+            管理員登入
+        </div>
+        <div class="panel-body">
+            <form action="{{ url_for('admin.index') }}" method="post">
+                <div style="margin: 0.5rem 0;">
+                    <label>管理員 ID：</label>
+                    <input type="text" name="admin_id">
+                </div>
+                <div style="margin: 0.5rem 0;">
+                    <label>密碼：</label>
+                    <input type="password" name="admin_pass">
+                </div>
+                <button type="submit" class="btn btn-primary">登入</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

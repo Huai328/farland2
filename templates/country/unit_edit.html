@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">建立部隊</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">建立新的部隊。</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="unit_edit2">
+                <div class="form-row">
+                    <label>部隊名稱</label>
+                    <input type="text" name="unit_name" maxlength="16" style="width:100%;">
+                </div>
+                <div class="form-row">
+                    <label>訊息</label>
+                    <textarea name="message" rows="2" style="width:100%; font-size:0.8rem;" maxlength="200"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">建立</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('country.dispatch', mode='unit') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

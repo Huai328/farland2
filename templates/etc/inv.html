@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">
+            侵攻
+        </div>
+        <div class="panel-body" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            {# 世界地圖 #}
+            <div>
+                <table style="border-collapse: collapse; background-color: #663300;">
+                    <tr>
+                        <td style="width: 20px; height: 15px; background: #ffffcc; font-size: 0.6rem; text-align: center;"></td>
+                        {% for i in range(6) %}
+                        <td style="width: 20px; height: 15px; background: #ffffcc; font-size: 0.6rem; text-align: center;">{{ i }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% for row in range(6) %}
+                    <tr>
+                        <td style="background: #ffffcc; font-size: 0.6rem; text-align: center;">{{ row }}</td>
+                        {% for col in range(6) %}
+                        {% set cell = world_map[row][col] %}
+                        {% if cell %}
+                        <td style="background-color: {{ cell.bg_color if not cell.is_current else cell.fg_color }}; text-align: center; padding: 2px;"
+                            title="{{ cell.town.name }}({{ ELEMENTS[cell.town.element] }})【{{ cell.country_name }}國】">
+                            <img src="{{ url_for('static', filename='img/town/' ~ ('m_2' if cell.town.id == 0 else 'm_4') ~ '.gif') }}"
+                                 width="15" height="10" alt="{{ cell.town.name }}">
+                        </td>
+                        {% else %}
+                        <td style="background: #663300; width: 20px; height: 15px;"></td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            {# 侵攻選擇 #}
+            <div style="flex: 1; background: #330000; padding: 1rem; color: #ffffcc;">
+                <p>選擇要侵攻的城鎮。</p>
+                <p>目前所在地：{{ town.name }}（{{ town.x }} - {{ town.y }}）</p>
+                {% if adjacent_enemies %}
+                <form action="{{ url_for('main.top') }}" method="post">
+                    <input type="hidden" name="mode" value="inv2">
+                    <select name="tid" style="margin: 0.5rem 0;">
+                        <option value="">——請選擇——</option>
+                        {% for t in adjacent_enemies %}
+                        <option value="{{ t.id }}">{{ t.name }}（{{ t.x }} - {{ t.y }}）</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary">侵攻</button>
+                </form>
+                {% else %}
+                <p style="color: #ff9999;">周圍沒有可攻擊的城鎮。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

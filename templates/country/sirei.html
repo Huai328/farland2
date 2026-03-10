@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">命令</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ country.name }}國的國民發布命令。<br>
+            {% if country.message %}目前的命令：{{ country.message }}{% endif %}</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="sirei2">
+                <div class="form-row">
+                    <label>命令內容</label>
+                    <textarea name="message" rows="3" style="width:100%; font-size:0.8rem;" maxlength="200">{{ country.message or '' }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">命令</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

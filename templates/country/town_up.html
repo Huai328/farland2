@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">城鎮發展</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ town.name }}城的各項設施進行投資。<br>
+            武器:{{ town.weapon_dev }} 防具:{{ town.armor_dev }} 飾品:{{ town.acc_dev }} 產業:{{ town.item_dev }} 交易:{{ town.trade }}</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="town_up2">
+                <div class="form-row">
+                    <label>對象</label>
+                    <select name="target" style="font-size:0.8rem;">
+                        <option value="arm">武器店</option>
+                        <option value="pro">防具店</option>
+                        <option value="acc">飾品店</option>
+                        <option value="item">產業</option>
+                        <option value="trade">交易</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>投資額</label>
+                    <input type="number" name="amount" min="1" style="width:80px;"> ×10000G
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">投資</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

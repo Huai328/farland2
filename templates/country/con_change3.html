@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">退出</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ country.name }}國退出。<br>
+            退出需要 5,000,000G。<br>
+            退出後，狀態將被重置。<br>
+            確定要退出嗎？</p>
+            <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                <form action="{{ url_for('country.dispatch') }}" method="post">
+                    <input type="hidden" name="mode" value="con_change4">
+                    <button type="submit" class="btn btn-primary">退出</button>
+                </form>
+                <a href="{{ url_for('main.top') }}" class="btn btn-secondary">返回</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: #660033; background: #660033;">
+        <div style="text-align: center; padding: 1rem;">
+            <span style="font-size: 1.8rem; color: #ffff99;">世界情勢</span>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; padding: 0 1rem;">
+            {# 世界地圖 #}
+            <div style="background: #330000; padding: 1rem;">
+                <table style="border-collapse: collapse; background-color: #663300;">
+                    <tr>
+                        <td style="width: 20px; height: 15px; background: #ffffcc; font-size: 0.6rem; text-align: center;"></td>
+                        {% for i in range(6) %}
+                        <td style="width: 20px; height: 15px; background: #ffffcc; font-size: 0.6rem; text-align: center;">{{ i }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% for row in range(6) %}
+                    <tr>
+                        <td style="background: #ffffcc; font-size: 0.6rem; text-align: center;">{{ row }}</td>
+                        {% for col in range(6) %}
+                        {% set cell = world_map[row][col] %}
+                        {% if cell %}
+                        <td style="background-color: {{ cell.bg_color }}; text-align: center; padding: 2px;"
+                            title="{{ cell.town.name }}【{{ cell.country_name }}】">
+                            <img src="{{ url_for('static', filename='img/town/' ~ ('m_2' if cell.town.id == 0 else 'm_4') ~ '.gif') }}"
+                                 width="15" height="10" alt="{{ cell.town.name }}">
+                        </td>
+                        {% else %}
+                        <td style="background: #663300; width: 20px; height: 15px;"></td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            {# 情勢解說 #}
+            <div style="flex: 1; background: #844200; padding: 1rem; color: #ffffcc; font-size: 0.9rem; line-height: 1.8;">
+                <strong>&lt;各國的情勢&gt;</strong><br>
+                {% for line in commentary.split('\n') %}
+                {{ line }}<br>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# 國家排名 #}
+        <div style="padding: 1rem;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <tr>
+                    <td style="background: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }}; padding: 0.3rem;">國家</td>
+                    <td style="background: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }}; padding: 0.3rem;">國王</td>
+                    <td style="background: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }}; padding: 0.3rem;">人口</td>
+                    <td style="background: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }}; padding: 0.3rem;">財力</td>
+                    <td style="background: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }}; padding: 0.3rem;">領土</td>
+                </tr>
+                {% for d in ranked %}
+                {% set c = d.country %}
+                <tr>
+                    <td style="background: {{ ELEMENT_BG[c.element] }}; color: {{ ELEMENT_FG[c.element] }}; padding: 0.3rem;">
+                        {{ c.name }}國（{{ ELEMENTS[c.element] }}）
+                    </td>
+                    <td style="background: {{ ELEMENT_FG[c.element] }}; padding: 0.3rem;">{{ d.king_name }}</td>
+                    <td style="background: {{ ELEMENT_FG[c.element] }}; padding: 0.3rem; text-align: right;">
+                        {{ d.population }}人（第{{ d.pop_rank }}位）
+                    </td>
+                    <td style="background: {{ ELEMENT_FG[c.element] }}; padding: 0.3rem; text-align: right;">
+                        {{ d.gold }} Gold（第{{ d.gold_rank }}位）
+                    </td>
+                    <td style="background: {{ ELEMENT_FG[c.element] }}; padding: 0.3rem; text-align: right;">
+                        {{ d.territory }}（第{{ d.territory_rank }}位）
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        {# 歷史紀錄 #}
+        <div style="background: #ffffcc; padding: 1rem; margin: 0 1rem 1rem;">
+            <strong style="color: #660000;">&lt;歷史&gt;</strong><br>
+            {% for log in history_logs %}
+            <span style="color: {{ FONT_COLOR }};">● {{ log.message }}</span><br>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

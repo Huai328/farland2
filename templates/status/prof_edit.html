@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">個人簡介變更</div>
+        <div class="panel-body">
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="prof_write">
+                <textarea name="profile" rows="8" style="width:100%; font-size:0.8rem;" maxlength="1000">{{ char.comment or '' }}</textarea>
+                <p style="font-size:0.7rem; color:#888;">最多 1000 個字元</p>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">重新整理</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

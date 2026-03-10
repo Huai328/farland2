@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">
+            {% if forum_type == 'con' %}{{ country.name }}族議論{% else %}全體議論{% endif %}
+        </div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">
+            {% if forum_type == 'con' %}{{ country.name }}族的討論區。請遵守禮儀進行意見交流。
+            {% else %}全體討論區。請遵守禮儀進行意見交流。{% endif %}</p>
+
+            {# 新建討論串發文 #}
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin:0.5rem 0; padding:0.5rem; background:#f5f5f5; border-radius:4px;">
+                <input type="hidden" name="mode" value="conv_write">
+                <input type="hidden" name="bbs" value="{{ forum_type }}">
+                <input type="hidden" name="type" value="1">
+                <div class="form-row">
+                    <label>標題</label>
+                    <input type="text" name="title" maxlength="30" style="width:100%;">
+                </div>
+                <div style="display:flex; gap:0.5rem; align-items:flex-start;">
+                    <img src="{{ url_for('static', filename='img/chara/' ~ char.chara_img ~ '.gif') }}" alt="{{ char.name }}" style="width:32px;">
+                    <textarea name="message" rows="3" style="flex:1; font-size:0.8rem;" maxlength="200"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-small" style="margin-top:0.3rem;">發文</button>
+            </form>
+
+            {# 討論串顯示 #}
+            {% for thread in threads %}
+            <div class="panel" style="border-color: {{ ELEMENT_BG.get(thread.op.country_element, '#555') }}; margin-bottom:0.5rem;">
+                <div class="panel-header" style="background-color: {{ ELEMENT_BG.get(thread.op.country_element, '#555') }}; color: {{ ELEMENT_FG.get(thread.op.country_element, '#fff') }}; font-size:0.75rem;">
+                    {{ thread.op.title }}
+                </div>
+                <div class="panel-body" style="padding:0;">
+                    {# OP #}
+                    <div class="chat-message" style="background: {{ ELEMENT_FG.get(thread.op.country_element, '#f5f5f5') }};">
+                        <img src="{{ url_for('static', filename='img/chara/' ~ thread.op.char_img ~ '.gif') }}" class="chat-avatar">
+                        <div class="chat-content" style="color:#000;">
+                            <strong style="color:#333;">{{ thread.op.char_name }}（{{ thread.op.role }}）</strong>
+                            <p style="color:#000;">{{ thread.op.body }}</p>
+                        </div>
+                    </div>
+                    {# 返信 #}
+                    {% for r in thread.replies %}
+                    <div class="chat-message" style="background: {{ ELEMENT_FG.get(r.country_element, '#f5f5f5') }}; flex-direction:row-reverse;">
+                        <div class="chat-content" style="color:#000; text-align:right;">
+                            <p style="color:#000;">{{ r.body }}</p>
+                            <strong style="color:#333;">{{ r.char_name }}（{{ r.role }}）</strong>
+                        </div>
+                        <img src="{{ url_for('static', filename='img/chara/' ~ r.char_img ~ '.gif') }}" class="chat-avatar">
+                    </div>
+                    {% endfor %}
+                    {# 回覆表單 #}
+                    <form action="{{ url_for('country.dispatch') }}" method="post" style="padding:0.3rem; display:flex; gap:4px; align-items:center;">
+                        <input type="hidden" name="mode" value="conv_write">
+                        <input type="hidden" name="bbs" value="{{ forum_type }}">
+                        <input type="hidden" name="resno" value="{{ loop.index0 }}">
+                        <textarea name="message" rows="1" style="flex:1; font-size:0.75rem;" maxlength="200" placeholder="回覆..."></textarea>
+                        <button type="submit" class="btn btn-small">傳送</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

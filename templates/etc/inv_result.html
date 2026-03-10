@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: #ffffcc;">
+            {{ target.name }} 攻城戰
+        </div>
+        <div class="panel-body">
+            {# 戰鬥過程 #}
+            {% for entry in battle_log %}
+            <div style="border: 1px solid {{ FONT_COLOR }}; margin-bottom: 0.5rem;">
+                <div style="background: {{ FONT_COLOR }}; color: #ffffcc; padding: 0.2rem 0.5rem; font-size: 0.8rem;">
+                    第 {{ entry.turn }} 回合
+                </div>
+                <div style="padding: 0.3rem 0.5rem; font-size: 0.8rem; background: {{ FONT_COLOR2 }};">
+                    {{ entry.msg }}
+                </div>
+                <div style="display: flex; gap: 1rem; padding: 0.2rem 0.5rem; font-size: 0.75rem; background: #ccffff;">
+                    <span>{{ char.name }} HP: {{ entry.p_hp }}/{{ char.max_hp }}</span>
+                    <span>城塞 HP: {{ entry.f_hp }}</span>
+                </div>
+            </div>
+            {% endfor %}
+
+            {# 結果 #}
+            <div style="text-align: center; padding: 1rem; background: #000; color: #ffffcc; margin-top: 1rem;">
+                <h3 style="color: {% if win %}#ff3333{% elif lose %}#3333ff{% else %}#ffffff{% endif %};">
+                    {{ result }}！
+                </h3>
+                {% if win %}
+                <p>經驗值 <span style="color: #cc0000;">{{ get_exp }}</span> 點獲得</p>
+                <p><span style="color: #000099;">{{ get_gold }}</span> Gold 獲得</p>
+                <p>熟練度 <span style="color: #cc0000;">{{ get_abp }}</span> 點獲得</p>
+                {% elif lose %}
+                <p>{{ char.name }}在侵攻中敗北...</p>
+                {% else %}
+                <p>勝負未分。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

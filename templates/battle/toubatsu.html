@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">討伐</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">對無所屬者進行討伐。<br>請選擇討伐目標。</p>
+            <form action="{{ url_for('battle.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="toubatsu2">
+                <select name="player" style="width:100%; font-size:0.8rem;">
+                    <option value="">請選擇目標</option>
+                    {% for p in players %}
+                    <option value="{{ p.id }}">{{ p.name }}（LV{{ p.level }}）</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">討伐</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

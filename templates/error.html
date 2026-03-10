@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="error-container">
+    <div class="panel" style="border-color: #660000;">
+        <div class="panel-header" style="background-color: #660000; color: #ffffcc;">
+            ＥＲＲＯＲ
+        </div>
+        <div class="panel-body" style="text-align: center; padding: 2rem;">
+            <p><strong>{{ message }}</strong></p>
+            {% if char %}
+            <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}" class="btn btn-primary">前往登入</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

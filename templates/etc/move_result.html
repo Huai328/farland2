@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">
+            移動
+        </div>
+        <div class="panel-body" style="display: flex; gap: 1rem; align-items: center;">
+            <div>
+                <img src="{{ url_for('static', filename='img/etc/inn2.gif') }}" alt="移動">
+            </div>
+            <div style="background: #330000; padding: 1rem; color: #ffffcc; flex: 1;">
+                已抵達 {{ target.name }}。
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

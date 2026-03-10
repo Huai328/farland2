@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    {# 戦場情報 #}
+    <div class="panel" style="border-color: {{ ELEMENT_BG.get(char.element, '#555') }};">
+        <div class="panel-header" style="background-color: {{ ELEMENT_BG.get(char.element, '#555') }}; color: {{ ELEMENT_FG.get(char.element, '#fff') }};">
+            {{ location }}
+        </div>
+        <div class="panel-body">
+            {# 對戰卡片 #}
+            <div style="display:flex; gap:0.5rem; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <div style="text-align:center; flex:1; min-width:120px; background:{{ ELEMENT_BG.get(char.element, '#555') }}; padding:0.3rem; border-radius:4px;">
+                    <img src="{{ url_for('static', filename='img/chara/' ~ char.chara_img ~ '.gif') }}" alt="{{ char.name }}" style="display:block; margin:0 auto;">
+                    <span style="color:{{ ELEMENT_FG.get(char.element, '#fff') }}; font-size:0.8rem;">{{ char.name }}</span>
+                </div>
+                <div style="font-size:1.5rem; font-weight:bold;">VS</div>
+                <div style="text-align:center; flex:1; min-width:120px; background:{{ ELEMENT_BG.get(enemy.element, '#555') }}; padding:0.3rem; border-radius:4px;">
+                    <img src="{{ url_for('static', filename='img/chara/' ~ enemy.chara_img ~ '.gif') }}" alt="{{ enemy.name }}" style="display:block; margin:0 auto;">
+                    <span style="color:{{ ELEMENT_FG.get(enemy.element, '#fff') }}; font-size:0.8rem;">{{ enemy.name }}</span>
+                </div>
+            </div>
+
+            {# 戰鬥紀錄 #}
+            {% for turn in result.turns %}
+            <div class="panel" style="border-color: {{ FONT_COLOR }}; margin-bottom:0.5rem;">
+                <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }}; font-size:0.75rem; padding:0.2rem;">
+                    {{ turn.turn_num }}回合
+                </div>
+                <div class="panel-body" style="font-size:0.75rem; padding:0.3rem;">
+                    {{ turn.messages|safe }}
+                    <div style="display:flex; gap:1rem; margin-top:0.3rem; font-size:0.7rem; background:#e0e8f0; padding:0.2rem; border-radius:2px;">
+                        <span>{{ char.name }}: HP {{ turn.player_hp }}/{{ turn.player_max_hp }} MP {{ turn.player_mp }}/{{ turn.player_max_mp }}</span>
+                        <span>{{ enemy.name }}: HP {{ turn.enemy_hp }}/{{ turn.enemy_max_hp }} MP {{ turn.enemy_mp }}/{{ turn.enemy_max_mp }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {# 結果 #}
+            <div class="panel" style="border-color: {% if result.win %}#006600{% elif result.lose %}#990000{% else %}#666{% endif %};">
+                <div class="panel-header" style="background-color: {% if result.win %}#006600{% elif result.lose %}#990000{% else %}#666{% endif %}; color: #ffffcc;">
+                    {% if result.win %}勝利！{% elif result.lose %}敗北…{% else %}平手{% endif %}
+                </div>
+                <div class="panel-body" style="font-size:0.8rem;">
+                    {% if result.win %}
+                    <p>經驗值 <b style="color:#c00;">{{ get_ex }}</b> 點數獲取</p>
+                    {% if get_gold > 0 %}<p><b style="color:#009;">{{ get_gold }}</b> Gold 入手！</p>{% endif %}
+                    {% if get_abp > 0 %}<p>熟練度 <b style="color:#c00;">{{ get_abp }}</b> 點數獲取</p>{% endif %}
+                    {% elif result.lose %}
+                    <p>{{ char.name }}的持有金變成了一半。</p>
+                    {% else %}
+                    <p>未能分出勝負。</p>
+                    {% endif %}
+                    {% if post_msg %}
+                    <div style="margin-top:0.5rem;">{{ post_msg|safe }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+        <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+        <form action="{{ url_for('town.dispatch') }}" method="post" style="margin:0;">
+            <input type="hidden" name="mode" value="inn">
+            <button type="submit" class="btn btn-secondary">直接前往旅店</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

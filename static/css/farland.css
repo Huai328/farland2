@@ -1,0 +1,363 @@
+/* Farland History Ⅱ — 適度現代化 CSS
+   保留原始配色主題，使用 CSS Grid/Flexbox 佈局 */
+
+:root {
+    --bg-color: #ffddcc;
+    --font-color: #883300;
+    --font-color2: #ffffee;
+    --panel-radius: 4px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'MS Gothic', 'Hiragino Kaku Gothic ProN', monospace;
+    font-size: 13px;
+    background-color: var(--bg-color);
+    color: #333;
+    line-height: 1.4;
+}
+
+a {
+    color: var(--font-color);
+    text-decoration: none;
+}
+a:hover {
+    color: #cc5500;
+    text-decoration: underline;
+}
+
+/* パネル（共通枠） */
+.panel {
+    border: 3px double var(--font-color);
+    border-radius: var(--panel-radius);
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+.panel-header {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.panel-body {
+    padding: 6px 8px;
+}
+
+/* ボタン */
+.btn {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 2px double var(--font-color);
+    background-color: var(--font-color2);
+    color: #333;
+    cursor: pointer;
+    font-size: 0.8rem;
+    border-radius: 2px;
+    text-decoration: none;
+}
+.btn:hover {
+    background-color: #ffe8cc;
+    text-decoration: none;
+}
+.btn-primary {
+    background-color: var(--font-color);
+    color: var(--font-color2);
+    border-color: var(--font-color);
+}
+.btn-primary:hover {
+    background-color: #aa4400;
+    color: #fff;
+}
+.btn-secondary {
+    background-color: #666;
+    color: #fff;
+    border-color: #666;
+}
+.btn-small {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+}
+
+/* フラッシュメッセージ */
+.flash-messages {
+    max-width: 800px;
+    margin: 0.5rem auto;
+}
+.flash-msg {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: var(--panel-radius);
+}
+
+/* トップページ（index） */
+.index-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    text-align: center;
+}
+.game-title {
+    font-size: 1.8rem;
+    color: var(--font-color);
+    margin-bottom: 1.5rem;
+}
+.index-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+.index-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    justify-content: center;
+}
+
+/* ログインページ */
+.login-container {
+    max-width: 320px;
+    margin: 3rem auto;
+    text-align: center;
+}
+.login-form, .register-form {
+    padding: 1rem;
+}
+.form-row {
+    margin-bottom: 0.75rem;
+    text-align: left;
+}
+.form-row label {
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+    color: #555;
+}
+.form-row input[type="text"],
+.form-row input[type="password"],
+.form-row input[type="email"],
+.form-row input[type="number"],
+.form-row select {
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid #999;
+    font-size: 0.85rem;
+}
+.radio-group {
+    display: flex;
+    gap: 1rem;
+}
+.radio-group label {
+    display: inline;
+}
+.register-link {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* 登録ページ */
+.register-container {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+/* エラーページ */
+.error-container {
+    max-width: 500px;
+    margin: 3rem auto;
+}
+
+/* メインページ（top） */
+.top-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0.5rem;
+}
+
+.guest-list {
+    font-size: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.command-grid {
+    padding: 6px;
+}
+.stat-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 4px;
+    align-items: center;
+}
+.stat-pair {
+    display: flex;
+    gap: 4px;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+}
+.stat-label {
+    font-weight: bold;
+    min-width: 3em;
+}
+.stat-value {
+    color: #333;
+}
+
+.command-cell {
+    font-size: 0.75rem;
+}
+.inline-form {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.inline-form select {
+    max-width: 200px;
+    font-size: 0.75rem;
+    padding: 1px 2px;
+}
+.cmd-label {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.char-portrait {
+    float: left;
+    margin-right: 8px;
+    padding: 4px;
+}
+.char-portrait img {
+    display: block;
+}
+
+/* ログ */
+.log-panel {
+    margin-top: 0.5rem;
+}
+.log-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+.log-entries {
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 0.75rem;
+}
+.log-entry {
+    margin-bottom: 2px;
+}
+
+/* ヒント */
+.hint-panel {
+    margin-top: 0.5rem;
+}
+
+/* チャット */
+.chat-panel {
+    margin-top: 0.5rem;
+}
+.chat-form {
+    margin-bottom: 0.5rem;
+}
+.chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+}
+.chat-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 2px 4px;
+}
+.chat-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+.chat-column h4 {
+    font-size: 0.8rem;
+    margin: 0.5rem 0 0.25rem;
+    color: #555;
+}
+.chat-message {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4px;
+    padding: 4px;
+    background: #000;
+    color: #fff;
+    border-radius: 2px;
+}
+.chat-avatar {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+.chat-content {
+    font-size: 0.75rem;
+}
+.chat-content strong {
+    display: block;
+    color: #ccc;
+}
+.chat-content p {
+    color: #fff;
+}
+
+/* フッター */
+.site-footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 2rem;
+}
+.site-footer a {
+    color: #666;
+}
+
+/* 戦闘メッセージ */
+.player-name { color: #0000cc; font-size: 1.1em; }
+.enemy-name { color: #cc0000; font-size: 1.1em; }
+.tech-name { color: #cc0000; font-size: 1.1em; }
+.atk-count { color: #0000cc; font-size: 1.1em; }
+.dmg { color: #cc0000; font-size: 1.1em; }
+.heal { color: #0066cc; }
+.crit { color: #0000ff; font-size: 1.1em; }
+.msg-warning { color: #cc0000; }
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .stat-row {
+        grid-template-columns: 1fr;
+    }
+    .log-columns, .chat-columns {
+        grid-template-columns: 1fr;
+    }
+    .index-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}

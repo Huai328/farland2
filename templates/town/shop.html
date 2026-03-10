@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">{{ shop_name }}</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">持有金: {{ char.gold }}G {% if discount > 0 %}| 折扣: {{ discount }}%{% endif %}</p>
+            <h4 style="font-size:0.85rem;">商品一覽</h4>
+            <form action="{{ url_for('town.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="buy">
+                <table style="width:100%; font-size:0.75rem;">
+                    <tr><th></th><th>名稱</th><th>威力量</th><th>重量</th><th>價格</th></tr>
+                    {% for item in shop_items %}
+                    {% set real_price = item.price - (item.price * discount // 100) %}
+                    <tr>
+                        <td><input type="radio" name="equip_id" value="{{ item.id }}"></td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.power }}</td>
+                        <td>{{ item.weight }}</td>
+                        <td>{{ real_price }}G</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">購買</button>
+            </form>
+            {% if inventory %}
+            <hr>
+            <h4 style="font-size:0.85rem;">出售</h4>
+            <form action="{{ url_for('town.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="sell">
+                <table style="width:100%; font-size:0.75rem;">
+                    <tr><th></th><th>名稱</th><th>威力量</th><th>售價</th></tr>
+                    {% for item in inventory %}
+                    <tr>
+                        <td><input type="radio" name="item_id" value="{{ item.id }}"></td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.power }}</td>
+                        <td>{{ item.price // 2 }}G</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-secondary" style="margin-top:0.5rem;">出售</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

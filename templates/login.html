@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">
+            登入資訊
+        </div>
+        <form action="{{ url_for('main.login') }}" method="POST" class="login-form">
+            <div class="form-row">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" maxlength="8" required>
+            </div>
+            <div class="form-row">
+                <label for="pass">PASS</label>
+                <input type="password" id="pass" name="pass" maxlength="8" required>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="btn btn-primary">登入</button>
+            </div>
+        </form>
+    </div>
+    <p class="register-link">
+        <a href="{{ url_for('main.register') }}">點此新註冊</a>
+    </p>
+</div>
+{% endblock %}

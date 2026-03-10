@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">解雇</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ country.name }}國的國民予以解雇。<br>
+            解雇需要國家貢獻度 100。<br>
+            被解雇者將從國家中放逐，成為無國籍人。</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="discharge2">
+                <select name="cand" style="width:100%; font-size:0.8rem;">
+                    <option value="">選擇對象</option>
+                    {% for m in members %}
+                    <option value="{{ m.id }}">{{ m.name }}（LV{{ m.level }}）</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">解雇</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">事件</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ event_text }}</p>
+            <form action="{{ url_for('town.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="event2">
+                <button type="submit" class="btn btn-primary">挑戰</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

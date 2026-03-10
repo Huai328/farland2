@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">職業變更</div>
+        <div class="panel-body">
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="change2">
+                <table style="width: 100%; font-size: 0.8rem;">
+                    <tr><th></th><th>職業名</th><th>條件</th></tr>
+                    {% for job in available_jobs %}
+                    <tr><td><input type="radio" name="job_id" value="{{ job.id }}"></td><td>{{ job.name }}</td><td style="font-size:0.7rem;">{{ job.requirements or '—' }}</td></tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">轉職</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

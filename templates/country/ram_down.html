@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">攻擊</div>
+        <div class="panel-body">
+            <div style="display:flex; gap:0.5rem; align-items:flex-start; flex-wrap:wrap;">
+                <div style="font-size:0.8rem; flex:1; min-width:200px;">
+                    <p>攻擊敵國的城池。<br>
+                    請選擇攻擊目標，並準備資金。<br>
+                    目前國庫：{{ country.gold }}G</p>
+                </div>
+            </div>
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="ram_down2">
+                <div class="form-row">
+                    <label>攻擊目標</label>
+                    <select name="tid" style="width:100%; font-size:0.8rem;">
+                        <option value="">選擇城池</option>
+                        {% for t in adjacent %}
+                        <option value="{{ t.id }}">{{ t.name }}{% if countries.get(t.country_id) %}【{{ countries[t.country_id].name }}】{% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row" style="display:flex; gap:0.5rem; align-items:center;">
+                    <select name="pow" style="font-size:0.8rem;">
+                        <option value="t_str">降低攻擊值</option>
+                        <option value="t_def">降低防禦值</option>
+                    </select>
+                    <input type="number" name="gold" min="1" max="300" style="width:60px;"> ×10000G
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">攻擊</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

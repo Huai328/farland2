@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">被動技能取得</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">目前的熟練度： {{ char.ability_pts }}</p>
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="skill2">
+                <table style="width:100%; font-size:0.8rem;">
+                    <tr><th></th><th>名稱</th><th>說明</th><th>消耗</th></tr>
+                    {% for ab in abilities %}
+                    <tr><td><input type="radio" name="ability_id" value="{{ ab.id }}"></td><td>{{ ab.name }}</td><td style="font-size:0.7rem;">{{ ab.description }}</td><td>{{ ab.cost }}</td></tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">學習</button>
+            </form>
+            <hr>
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="skill3">
+                <button type="submit" class="btn btn-secondary">極限修行</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

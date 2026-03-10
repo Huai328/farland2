@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">高級旅館</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">HP/MP 的最大值將會提升。</p>
+            <table style="font-size:0.8rem; width:100%;">
+                <tr><td>費用</td><td style="text-align:right;">{{ cost }}G</td></tr>
+                <tr><td>持有金</td><td style="text-align:right;">{{ char.gold }}G</td></tr>
+                <tr><td>目前最大HP</td><td style="text-align:right;">{{ char.max_hp }}</td></tr>
+                <tr><td>目前最大MP</td><td style="text-align:right;">{{ char.max_mp }}</td></tr>
+            </table>
+            <form action="{{ url_for('town.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="hinn2">
+                <button type="submit" class="btn btn-primary">住宿</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

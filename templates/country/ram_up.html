@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">城池強化</div>
+        <div class="panel-body">
+            <div style="display:flex; gap:0.5rem; align-items:flex-start; flex-wrap:wrap;">
+                <img src="{{ url_for('static', filename='img/etc/siro.gif') }}" alt="城" style="width:64px;">
+                <div style="font-size:0.8rem; flex:1; min-width:200px;">
+                    <p>{{ town.name }}城進行強化。<br>
+                    請選擇強化項目，並準備資金。<br>
+                    目前國庫：{{ country.gold }}G<br>
+                    城HP:{{ town.town_hp }}/{{ town.town_max_hp }} 攻:{{ town.town_str }} 防:{{ town.town_def }}</p>
+                </div>
+            </div>
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="ram_up2">
+                <select name="pow" style="font-size:0.8rem;">
+                    <option value="t_hp">城池體力量</option>
+                    <option value="t_maxhp">城池上限</option>
+                    <option value="t_str">攻擊力量</option>
+                    <option value="t_def">防禦力量</option>
+                </select>
+                <input type="number" name="gold" min="1" max="300" style="width:60px;"> ×10000G
+                <button type="submit" class="btn btn-primary">強化</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

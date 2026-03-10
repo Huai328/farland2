@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="index-container">
+    <h1 class="game-title">{{ GAME_TITLE }}</h1>
+    <div class="index-actions">
+        <a href="{{ url_for('main.login') }}" class="btn btn-primary">登入</a>
+        <a href="{{ url_for('main.register') }}" class="btn btn-secondary">新註冊</a>
+    </div>
+    <nav class="index-links">
+        <a href="{{ url_for('static', filename='html/manual.html') }}">遊戲說明</a>
+        <a href="#">RANKING</a>
+        <a href="#">世界情勢</a>
+        <a href="#">街情報</a>
+        <a href="#">圖示一覽</a>
+    </nav>
+</div>
+{% endblock %}

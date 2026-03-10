@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">國王交接</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">{{ country.name }}國的國王將進行交接。<br>請選擇新的國王。</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="king_change2">
+                <select name="new_king" style="width:100%; font-size:0.8rem;">
+                    <option value="">選擇候選人</option>
+                    {% for m in members %}
+                    <option value="{{ m.id }}">{{ m.name }}（LV{{ m.level }}）</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">交接</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

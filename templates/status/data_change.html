@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">圖示變更</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">目前的圖示：</p>
+            <img src="{{ url_for('static', filename='img/chara/' ~ char.chara_img ~ '.gif') }}" alt="現在">
+            <p style="font-size:0.75rem; color:#888;">變更費用： 100,000G（持有金: {{ char.gold }}G）</p>
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="data_change2">
+                <div style="display:flex; flex-wrap:wrap; gap:0.25rem; margin:0.5rem 0;">
+                    {% for i in range(max_img + 1) %}
+                    <label style="cursor:pointer;">
+                        <input type="radio" name="img" value="{{ i }}" {% if i == char.chara_img %}checked{% endif %} style="display:none;">
+                        <img src="{{ url_for('static', filename='img/chara/' ~ i ~ '.gif') }}" alt="{{ i }}" style="width:32px; height:32px; border:2px solid transparent;" onclick="this.parentElement.querySelector('input').checked=true; document.querySelectorAll('label img').forEach(e=>e.style.borderColor='transparent'); this.style.borderColor='{{ FONT_COLOR }}';">
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">變更</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ ELEMENT_BG[char.element] }};">
+        <div class="panel-header" style="background-color: {{ ELEMENT_BG[char.element] }}; color: {{ ELEMENT_FG[char.element] }};">
+            狀態確認
+        </div>
+        <div class="panel-body" style="background-color: {{ ELEMENT_FG[char.element] }};">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div>
+                    <img src="{{ url_for('static', filename='img/chara/' ~ char.chara_img ~ '.gif') }}" alt="{{ char.name }}">
+                </div>
+                <div class="stat-grid" style="flex: 1;">
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">名稱</span><span>{{ char.name }}</span></div><div class="stat-pair"><span class="stat-label">LV</span><span>{{ char.level }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">HP</span><span>{{ char.hp }}/{{ char.max_hp }}</span></div><div class="stat-pair"><span class="stat-label">MP</span><span>{{ char.mp }}/{{ char.max_mp }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">力量</span><span>{{ char.str_stat }}</span></div><div class="stat-pair"><span class="stat-label">耐力</span><span>{{ char.vit }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">智力</span><span>{{ char.int_stat }}</span></div><div class="stat-pair"><span class="stat-label">精神</span><span>{{ char.fai }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">靈巧</span><span>{{ char.dex }}</span></div><div class="stat-pair"><span class="stat-label">敏捷</span><span>{{ char.agi }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">職業</span><span>{{ JOBS[char.job_class] }}</span></div><div class="stat-pair"><span class="stat-label">屬性</span><span>{{ ELEMENTS[char.element] }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">經驗值</span><span>{{ char.exp }}</span></div><div class="stat-pair"><span class="stat-label">熟練度</span><span>{{ char.ability_pts }}</span></div></div>
+                    <div class="stat-row"><div class="stat-pair"><span class="stat-label">持有金</span><span>{{ char.gold }}G</span></div><div class="stat-pair"><span class="stat-label">銀行</span><span>{{ char.bank }}G</span></div></div>
+                </div>
+            </div>
+            <hr style="margin: 0.5rem 0;">
+            <h4 style="font-size: 0.85rem;">裝備</h4>
+            <table style="font-size: 0.8rem; width: 100%;">
+                <tr><td>武器</td><td>{{ weapon.name }}</td><td>攻{{ weapon.damage }}</td><td>重{{ weapon.weight }}</td></tr>
+                <tr><td>防具</td><td>{{ armor.name }}</td><td>防{{ armor.damage }}</td><td>重{{ armor.weight }}</td></tr>
+                <tr><td>飾品</td><td>{{ accessory.name }}</td><td>効{{ accessory.damage }}</td><td>重{{ accessory.weight }}</td></tr>
+            </table>
+            <hr style="margin: 0.5rem 0;">
+            <h4 style="font-size: 0.85rem;">技能</h4>
+            <ul style="font-size: 0.8rem; list-style: none; padding: 0;">
+            {% for tec in techniques %}
+                <li>{{ loop.index }}. {{ tec.name if tec else '（無）' }}</li>
+            {% endfor %}
+            </ul>
+            <h4 style="font-size: 0.85rem;">被動技能</h4>
+            <ul style="font-size: 0.8rem; list-style: none; padding: 0;">
+            {% for ab in abilities %}
+                <li>{{ loop.index }}. {{ ab.name if ab else '（無）' }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

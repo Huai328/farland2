@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: {{ FONT_COLOR }}; color: {{ FONT_COLOR2 }};">熟練度取得</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">目前的熟練度： {{ char.ability_pts }}</p>
+            <p style="font-size:0.75rem; color:#888;">將職業點數的 70% 轉換為熟練度。</p>
+            <form action="{{ url_for('status.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="getabp2">
+                <table style="width:100%; font-size:0.8rem;">
+                    <tr><th></th><th>類型</th><th>點數</th></tr>
+                    {% for i in range(6) %}
+                    <tr>
+                        <td><input type="radio" name="jp_type" value="{{ i }}"></td>
+                        <td>{{ JOB_TYPES.get(i, '類型' ~ i) }}</td>
+                        <td>{{ char.parsed_job_points[i] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">轉換</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

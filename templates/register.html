@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="register-container">
+    <div class="panel" style="border-color: #990099;">
+        <div class="panel-header" style="background-color: #660066; color: #ffffcc;">
+            新角色註冊
+        </div>
+        <form action="{{ url_for('main.register') }}" method="POST" class="register-form">
+            <div class="form-row">
+                <label for="id">ID（4-8 個字元，半形英數）</label>
+                <input type="text" id="id" name="id" minlength="4" maxlength="8" pattern="[0-9a-zA-Z]+" required>
+            </div>
+            <div class="form-row">
+                <label for="pass">密碼（4-8 個字元，半形英數）</label>
+                <input type="password" id="pass" name="pass" minlength="4" maxlength="8" pattern="[0-9a-zA-Z]+" required>
+            </div>
+            <div class="form-row">
+                <label for="name">名稱（2-8 個字元）</label>
+                <input type="text" id="name" name="name" minlength="2" maxlength="8" required>
+            </div>
+            <div class="form-row">
+                <label for="mail">電子信箱</label>
+                <input type="email" id="mail" name="mail" required>
+            </div>
+            <div class="form-row">
+                <label for="mailconfirm">電子信箱確認</label>
+                <input type="email" id="mailconfirm" name="mailconfirm" required>
+            </div>
+            <div class="form-row">
+                <label>性別</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="sex" value="0" checked> 男</label>
+                    <label><input type="radio" name="sex" value="1"> 女</label>
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="ele">屬性</label>
+                <select id="ele" name="ele" required>
+                    {% for eid, ename in ELEMENTS.items() %}
+                    {% if eid > 0 %}
+                    <option value="{{ eid }}" style="background-color: {{ ELEMENT_FG[eid] }};">{{ ename }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="con_id">所屬國</label>
+                <select id="con_id" name="con_id">
+                    <option value="0">無所屬</option>
+                    {% for c in countries %}
+                    <option value="{{ c.id }}" style="background-color: {{ ELEMENT_FG[c.element] }};">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="img">角色圖片</label>
+                <input type="number" id="img" name="img" min="1" max="202" value="1" required>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="btn btn-primary">註冊</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">建國</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">將建立新的國家。<br>建國需要 5,000,000G。<br>請選擇國名與據點城池。</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="build2">
+                <div class="form-row">
+                    <label>國名</label>
+                    <input type="text" name="con_name" maxlength="10" style="width:100%;">
+                </div>
+                <div class="form-row">
+                    <label>據點城池</label>
+                    <select name="town_id" style="width:100%; font-size:0.8rem;">
+                        <option value="">選擇城池</option>
+                        {% for t in towns %}
+                        <option value="{{ t.id }}">{{ t.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">建國</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

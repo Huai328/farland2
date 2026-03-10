@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">國王交涉</div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">向他國國王發送訊息。</p>
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem;">
+                <input type="hidden" name="mode" value="king_chat">
+                <div class="form-row">
+                    <label>收件人</label>
+                    <select name="target_con" style="width:100%; font-size:0.8rem;">
+                        <option value="">選擇國家</option>
+                        {% for c in countries %}
+                        <option value="{{ c.id }}">{{ c.name }}{% if kings.get(c.id) %}（{{ kings[c.id].name }}）{% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>訊息</label>
+                    <textarea name="message" rows="3" style="width:100%; font-size:0.8rem;" maxlength="200"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">傳送</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

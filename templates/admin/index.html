@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: #aa0000;">
+        <div class="panel-header" style="background-color: #aa0000; color: #fff;">
+            管理工具
+        </div>
+        <div class="panel-body">
+            <table style="width: 80%; margin: 0 auto; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <th style="padding: 0.5rem;">
+                        <a href="{{ url_for('admin.characters') }}" class="btn btn-primary">角色管理</a>
+                    </th>
+                    <td style="padding: 0.5rem;">查看/搜尋/刪除已註冊的角色資料。</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <th style="padding: 0.5rem;">
+                        <a href="{{ url_for('admin.cleanup_inactive') }}" class="btn btn-primary">清除不活躍玩家</a>
+                    </th>
+                    <td style="padding: 0.5rem;">刪除 7 天未登入且不足 10 戰的玩家。</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <th style="padding: 0.5rem;">
+                        <form action="{{ url_for('admin.warn') }}" method="post" style="display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="text" name="player" placeholder="玩家名稱" size="15">
+                            <button type="submit" class="btn btn-primary">發出警告</button>
+                        </form>
+                    </th>
+                    <td style="padding: 0.5rem;">對指定玩家發出管理員警告。</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ccc;">
+                    <th style="padding: 0.5rem;">
+                        <form action="{{ url_for('admin.admin_login') }}" method="post" style="display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="text" name="char_id" placeholder="角色 ID" size="15">
+                            <button type="submit" class="btn btn-primary">管理員登入</button>
+                        </form>
+                    </th>
+                    <td style="padding: 0.5rem;">以指定角色身份登入遊戲。</td>
+                </tr>
+                <tr>
+                    <th style="padding: 0.5rem;">
+                        <form action="{{ url_for('admin.init_data') }}" method="post" style="display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="text" name="confirm" placeholder="輸入 YES" size="10">
+                            <button type="submit" class="btn btn-primary" style="background: #cc0000;">全部初始化</button>
+                        </form>
+                    </th>
+                    <td style="padding: 0.5rem; color: red;">
+                        <strong>危險！</strong>清除所有遊戲資料。請輸入 YES 確認。
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">返回首頁</a>
+        <a href="{{ url_for('admin.logout') }}" class="btn btn-secondary">管理員登出</a>
+    </div>
+</div>
+{% endblock %}

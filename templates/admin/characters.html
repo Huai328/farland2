@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: #aa0000;">
+        <div class="panel-header" style="background-color: #aa0000; color: #fff;">
+            角色管理
+        </div>
+        <div class="panel-body">
+            <form action="{{ url_for('admin.characters') }}" method="get" style="margin-bottom: 1rem; display: flex; gap: 0.5rem;">
+                <input type="text" name="search" value="{{ search }}" placeholder="搜尋名稱">
+                <select name="sort">
+                    <option value="name" {{ 'selected' if sort_by == 'name' }}>按名稱</option>
+                    <option value="id" {{ 'selected' if sort_by == 'id' }}>按 ID</option>
+                    <option value="host" {{ 'selected' if sort_by == 'host' }}>按 Host</option>
+                </select>
+                <button type="submit" class="btn btn-primary">搜尋</button>
+            </form>
+
+            <form action="{{ url_for('admin.delete_char') }}" method="post">
+                <p>選擇要刪除的角色：</p>
+                <select name="char_id" size="15" style="width: 100%; font-size: 0.85rem;">
+                    {% for c in chars %}
+                    <option value="{{ c.id }}">{{ c.id }} | {{ c.name }} | {{ c.host }}</option>
+                    {% endfor %}
+                </select>
+                <div style="margin-top: 0.5rem;">
+                    <button type="submit" class="btn btn-primary" style="background: #cc0000;">刪除</button>
+                </div>
+            </form>
+            <p style="font-size: 0.8rem; margin-top: 1rem;">共 {{ chars|length }} 位角色</p>
+        </div>
+    </div>
+    <a href="{{ url_for('admin.index') }}" class="btn btn-primary">返回管理頁</a>
+</div>
+{% endblock %}

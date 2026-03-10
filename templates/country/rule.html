@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">
+            {% if rule_type == 1 %}{{ country.name }}族法{% else %}全體法{% endif %}
+        </div>
+        <div class="panel-body">
+            <p style="font-size:0.8rem;">
+            {% if rule_type == 1 %}{{ country.name }}族的規則。請遵守規則，不要違規。
+            {% else %}全體規則。所有玩家都應遵守的規則。{% endif %}</p>
+
+            {# 規則一覧 + 削除 #}
+            <form action="{{ url_for('country.dispatch') }}" method="post">
+                <input type="hidden" name="mode" value="rule_delete">
+                <input type="hidden" name="type" value="{{ rule_type }}">
+                <div style="margin:0.5rem 0;">
+                {% for r in rules %}
+                    <div style="display:flex; gap:4px; align-items:flex-start; margin-bottom:4px; padding:4px; background: {{ ELEMENT_FG.get(country.element if country else 0, '#f5f5f5') }}; border-radius:2px;">
+                        <input type="radio" name="no" value="{{ r.id }}">
+                        <div style="font-size:0.75rem; flex:1;">
+                            <p>{{ r.body }}</p>
+                            <small style="color:#666;">{{ r.char_name }} {{ r.role }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-small btn-secondary">刪除規則</button>
+            </form>
+
+            {# 規則追加 #}
+            <form action="{{ url_for('country.dispatch') }}" method="post" style="margin-top:0.5rem; padding:0.5rem; background:#f5f5f5; border-radius:4px;">
+                <input type="hidden" name="mode" value="rule_write">
+                <input type="hidden" name="type" value="{{ rule_type }}">
+                <div style="display:flex; gap:0.5rem; align-items:flex-start;">
+                    <img src="{{ url_for('static', filename='img/chara/' ~ char.chara_img ~ '.gif') }}" alt="{{ char.name }}" style="width:32px;">
+                    <textarea name="message" rows="3" style="flex:1; font-size:0.8rem;" maxlength="100"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-small" style="margin-top:0.3rem;">新增規則（僅限國王・家老）</button>
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}

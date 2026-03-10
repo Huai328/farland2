@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="top-container">
+    <div class="panel" style="border-color: {{ FONT_COLOR }};">
+        <div class="panel-header" style="background-color: #993300; color: #ffffcc;">部隊一覽</div>
+        <div class="panel-body">
+            {% if units %}
+            {% for u in units %}
+            <div class="panel" style="border-color: {{ ELEMENT_BG.get(country.element, '#555') }}; margin-bottom:0.5rem;">
+                <div class="panel-header" style="background-color: {{ ELEMENT_BG.get(country.element, '#555') }}; color: {{ ELEMENT_FG.get(country.element, '#fff') }}; font-size:0.8rem;">
+                    {{ u.name }}
+                    {% set leader = unit_members.get(u.id, [])|selectattr('id', 'equalto', u.leader_id)|first %}
+                    {% if leader %}（隊長: {{ leader.name }}）{% endif %}
+                </div>
+                <div class="panel-body" style="font-size:0.75rem;">
+                    {% if u.message %}<p>{{ u.message }}</p>{% endif %}
+                    <p>成員：
+                    {% for m in unit_members.get(u.id, []) %}
+                        {{ m.name }}（LV{{ m.level }}）{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                    </p>
+                    {% if not char.unit_id %}
+                    <form action="{{ url_for('country.dispatch') }}" method="post" style="display:inline;">
+                        <input type="hidden" name="mode" value="unit_entry">
+                        <input type="hidden" name="unit_id" value="{{ u.id }}">
+                        <button type="submit" class="btn btn-small">加入</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="font-size:0.8rem;">目前尚無部隊。</p>
+            {% endif %}
+
+            <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                {% if char.unit_id %}
+                <form action="{{ url_for('country.dispatch') }}" method="post">
+                    <input type="hidden" name="mode" value="unit_delete">
+                    <button type="submit" class="btn btn-secondary">退出部隊</button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('country.dispatch', mode='unit_edit') }}" class="btn btn-primary">建立部隊</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>
+</div>
+{% endblock %}
