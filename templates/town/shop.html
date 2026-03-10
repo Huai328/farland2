@@ -8,38 +8,68 @@
             <h4 style="font-size:0.85rem;">商品一覽</h4>
             <form action="{{ url_for('town.dispatch') }}" method="post">
                 <input type="hidden" name="mode" value="buy">
-                <table style="width:100%; font-size:0.75rem;">
-                    <tr><th></th><th>名稱</th><th>威力量</th><th>重量</th><th>價格</th></tr>
-                    {% for item in shop_items %}
-                    {% set real_price = item.price - (item.price * discount // 100) %}
-                    <tr>
-                        <td><input type="radio" name="equip_id" value="{{ item.id }}"></td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.power }}</td>
-                        <td>{{ item.weight }}</td>
-                        <td>{{ real_price }}G</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                <button type="submit" class="btn btn-primary" style="margin-top:0.5rem;">購買</button>
+                <div class="shop-table-wrap">
+                    <table class="shop-table">
+                        <thead>
+                            <tr>
+                                <th class="radio-col"></th>
+                                <th>名稱</th>
+                                <th class="num">威力</th>
+                                <th class="num">重量</th>
+                                <th class="num">價格</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in shop_items %}
+                            {% set real_price = item.price - (item.price * discount // 100) %}
+                            <tr>
+                                <td class="radio-col"><input type="radio" name="equip_id" value="{{ item.id }}"></td>
+                                <td>{{ item.name }}</td>
+                                <td class="num">{{ item.power }}</td>
+                                <td class="num">{{ item.weight }}</td>
+                                <td class="num">
+                                    {% if discount > 0 and real_price != item.price %}
+                                    <span class="price-original">{{ item.price }}</span>
+                                    <span class="price-discount">{{ real_price }}G</span>
+                                    {% else %}
+                                    {{ real_price }}G
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button type="submit" class="btn btn-primary">購買</button>
             </form>
             {% if inventory %}
             <hr>
             <h4 style="font-size:0.85rem;">出售</h4>
             <form action="{{ url_for('town.dispatch') }}" method="post">
                 <input type="hidden" name="mode" value="sell">
-                <table style="width:100%; font-size:0.75rem;">
-                    <tr><th></th><th>名稱</th><th>威力量</th><th>售價</th></tr>
-                    {% for item in inventory %}
-                    <tr>
-                        <td><input type="radio" name="item_id" value="{{ item.id }}"></td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.power }}</td>
-                        <td>{{ item.price // 2 }}G</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                <button type="submit" class="btn btn-secondary" style="margin-top:0.5rem;">出售</button>
+                <div class="shop-table-wrap">
+                    <table class="shop-table">
+                        <thead>
+                            <tr>
+                                <th class="radio-col"></th>
+                                <th>名稱</th>
+                                <th class="num">威力</th>
+                                <th class="num">售價</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in inventory %}
+                            <tr>
+                                <td class="radio-col"><input type="radio" name="item_id" value="{{ item.id }}"></td>
+                                <td>{{ item.name }}</td>
+                                <td class="num">{{ item.power }}</td>
+                                <td class="num">{{ item.price // 2 }}G</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button type="submit" class="btn btn-secondary">出售</button>
             </form>
             {% endif %}
         </div>

@@ -23,24 +23,77 @@
             </div>
             <hr style="margin: 0.5rem 0;">
             <h4 style="font-size: 0.85rem;">裝備</h4>
-            <table style="font-size: 0.8rem; width: 100%;">
-                <tr><td>武器</td><td>{{ weapon.name }}</td><td>攻{{ weapon.damage }}</td><td>重{{ weapon.weight }}</td></tr>
-                <tr><td>防具</td><td>{{ armor.name }}</td><td>防{{ armor.damage }}</td><td>重{{ armor.weight }}</td></tr>
-                <tr><td>飾品</td><td>{{ accessory.name }}</td><td>効{{ accessory.damage }}</td><td>重{{ accessory.weight }}</td></tr>
-            </table>
+            <div class="shop-table-wrap">
+                <table class="shop-table">
+                    <thead>
+                        <tr>
+                            <th>部位</th>
+                            <th>名稱</th>
+                            <th class="num">數值</th>
+                            <th class="num">重量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>武器</td>
+                            <td>{{ weapon.name }}</td>
+                            <td class="num">攻{{ weapon.damage }}</td>
+                            <td class="num">重{{ weapon.weight }}</td>
+                        </tr>
+                        <tr>
+                            <td>防具</td>
+                            <td>{{ armor.name }}</td>
+                            <td class="num">防{{ armor.damage }}</td>
+                            <td class="num">重{{ armor.weight }}</td>
+                        </tr>
+                        <tr>
+                            <td>飾品</td>
+                            <td>{{ accessory.name }}</td>
+                            <td class="num">効{{ accessory.damage }}</td>
+                            <td class="num">重{{ accessory.weight }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <hr style="margin: 0.5rem 0;">
             <h4 style="font-size: 0.85rem;">技能</h4>
-            <ul style="font-size: 0.8rem; list-style: none; padding: 0;">
-            {% for tec in techniques %}
-                <li>{{ loop.index }}. {{ tec.name if tec else '（無）' }}</li>
-            {% endfor %}
-            </ul>
+            <div class="shop-table-wrap">
+                <table class="shop-table">
+                    <thead>
+                        <tr>
+                            <th class="num" style="width: 2rem;">#</th>
+                            <th>名稱</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tec in techniques %}
+                        <tr>
+                            <td class="num">{{ loop.index }}</td>
+                            <td>{{ tec.name if tec else '（無）' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             <h4 style="font-size: 0.85rem;">被動技能</h4>
-            <ul style="font-size: 0.8rem; list-style: none; padding: 0;">
-            {% for ab in abilities %}
-                <li>{{ loop.index }}. {{ ab.name if ab else '（無）' }}</li>
-            {% endfor %}
-            </ul>
+            <div class="shop-table-wrap">
+                <table class="shop-table">
+                    <thead>
+                        <tr>
+                            <th class="num" style="width: 2rem;">#</th>
+                            <th>名稱</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ab in abilities %}
+                        <tr>
+                            <td class="num">{{ loop.index }}</td>
+                            <td>{{ ab.name if ab else '（無）' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <a href="{{ url_for('main.top') }}" class="btn btn-primary">返回</a>

@@ -348,6 +348,60 @@ a:hover {
 .crit { color: #0000ff; font-size: 1.1em; }
 .msg-warning { color: #cc0000; }
 
+/* 商店テーブル */
+.shop-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 0.5rem;
+}
+.shop-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+.shop-table thead th {
+    background-color: var(--font-color);
+    color: var(--font-color2);
+    padding: 5px 8px;
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.shop-table tbody td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #ddc8b0;
+}
+.shop-table tbody tr:nth-child(odd) {
+    background-color: #fff5ee;
+}
+.shop-table tbody tr:nth-child(even) {
+    background-color: #ffe8d6;
+}
+.shop-table tbody tr:hover {
+    background-color: #ffd6b0;
+}
+.shop-table tbody tr:has(:checked) {
+    background-color: #f5c89a;
+    font-weight: bold;
+}
+.shop-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.shop-table .radio-col {
+    width: 2rem;
+    text-align: center;
+}
+.shop-table .price-original {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.75rem;
+    margin-right: 4px;
+}
+.shop-table .price-discount {
+    color: #cc0000;
+    font-weight: bold;
+}
+
 /* レスポンシブ */
 @media (max-width: 768px) {
     .stat-row {
