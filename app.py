@@ -54,7 +54,9 @@ def create_app(config_class=Config):
 
     # 建立資料庫表
     with app.app_context():
-        db.drop_all()
+       db.session.execute(db.text("DROP SCHEMA public CASCADE;"))
+    db.session.execute(db.text("CREATE SCHEMA public;"))
+    db.session.commit()
         db.create_all()
 
     return app
