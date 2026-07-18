@@ -220,8 +220,11 @@ def main():
         print(f'資料目錄: {os.path.abspath(DATA_DIR)}')
         print()
 
-        db.drop_all()
+        db.session.execute(db.text("DROP SCHEMA public CASCADE;"))
+        db.session.execute(db.text("CREATE SCHEMA public;"))
+        db.session.commit()
         db.create_all()
+
 
 
         import_countries()
