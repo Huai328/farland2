@@ -32,14 +32,14 @@ class Config:
 
     # 經濟
     INVEST_GOLD = 50000    # 投資所需金額
-    BU_GOLD = 10_000_000   # 銀行上限
+    BU_GOLD = 10_000_000_000   # 銀行上限
 
     # 角色限制
     DOUBLE_ENTRY = True    # 允許雙重登錄檢查
     CHARA_ENTRY_CLOSED = False  # 是否關閉新角色註冊
     MAX_JOB_LEVEL = 99999
     MAX_ITEMS = 15
-    CHARA_IMG_COUNT = 202  # 角色圖片數量
+    CHARA_IMG_COUNT = 95  # 角色圖片數量
     LEVEL_CAP = 100
     STAT_CAP = 400         # 各屬性上限
 
@@ -50,7 +50,7 @@ class Config:
     MSG_UNIT = 3      # 部隊
 
     # Session 逾時
-    SESSION_TIMEOUT = 1200  # 秒
+    SESSION_TIMEOUT = 3600  # 秒
 
     # 認證
     ATTESTATION_ENABLED = False
