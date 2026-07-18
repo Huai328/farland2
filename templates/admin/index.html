@@ -8,9 +8,10 @@
         <div class="panel-body">
             <table style="width: 80%; margin: 0 auto; border-collapse: collapse;">
                 <tr style="border-bottom: 1px solid #ccc;">
-                    <th style="padding: 0.5rem;">
-                        <a href="{{ url_for('admin.characters') }}" class="btn btn-primary">角色管理</a>
-                    </th>
+        <th style="padding: 0.5rem;">
+            <a href="{{ url_for('admin.characters') }}" class="btn btn-primary">角色管理</a>
+            <a href="/db-manager/char_admin/" class="btn btn-primary" style="background-color: #007bff; margin-left: 10px;">📋 進階數據修改</a>
+        </th>
                     <td style="padding: 0.5rem;">查看/搜尋/刪除已註冊的角色資料。</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #ccc;">
