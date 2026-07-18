@@ -3,9 +3,13 @@ Farland History Ⅱ — Flask Application Factory
 """
 from flask import Flask
 from flask_session import Session
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 from config import Config
 from farland.models import db
+# 引入您的角色資料模型 (Character)
+from farland.models import Character
 
 
 def create_app(config_class=Config):
@@ -19,6 +23,13 @@ def create_app(config_class=Config):
     # 初始化擴展
     db.init_app(app)
     Session(app)
+
+    # 初始化 Flask-Admin 自動後台系統
+    # 注意：這裡把 url 設定為 /sys-admin，避免與您原本就有的 admin 藍圖網址衝突
+    admin = Admin(app, name='Farland 自動後台管理', template_mode='bootstrap4', url='/sys-admin')
+    
+    # 將「角色資料表」註冊進自動後台
+    admin.add_view(ModelView(Character, db.session, name='角色數值修改'))
 
     # 註冊 Blueprints
     from farland.blueprints.main import bp as main_bp
