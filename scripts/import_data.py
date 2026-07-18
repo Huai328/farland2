@@ -220,10 +220,9 @@ def main():
         print(f'資料目錄: {os.path.abspath(DATA_DIR)}')
         print()
 
-        # 清空既有資料
-        for model in [Town, Country, Equipment, Technique, Ability, Monster, JobClass]:
-            model.query.delete()
-        db.session.commit()
+        db.drop_all()
+        db.create_all()
+
 
         import_countries()
         import_towns()
