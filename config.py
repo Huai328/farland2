@@ -68,4 +68,4 @@ class Config:
 
     # 🌟 神之管理員最高權限帳密設定
     ADMIN_ID = "admin"
-    ADMIN_PASS = "admin"
+    ADMIN_PASS = "admin999"
