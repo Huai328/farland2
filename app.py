@@ -53,8 +53,8 @@ def create_app(config_class=Config):
     )
 
     # 建立資料庫表
-   # with app.app_context():
-    #    db.create_all()
+    with app.app_context():
+        db.create_all()
 
     return app
 
