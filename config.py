@@ -60,3 +60,12 @@ class Config:
     BG_COLOR = '#ffddcc'
     FONT_COLOR = '#883300'
     FONT_COLOR2 = '#ffffee'
+
+    # 🌟 延長登入時限設定：保持 7 天不用重新登入
+    PERMANENT_SESSION_LIFETIME = 604800  # 7 天的秒數
+    SESSION_PERMANENT = True             # 強制讓 Session 變成持久型
+    SESSION_REFRESH_EACH_REQUEST = True  # 玩家只要有操作，就自動重新計算 7 天
+
+    # 🌟 神之管理員最高權限帳密設定
+    ADMIN_ID = "admin"
+    ADMIN_PASS = "admin"
