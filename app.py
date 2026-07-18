@@ -53,11 +53,14 @@ def create_app(config_class=Config):
     )
 
     # 建立資料庫表
-with app.app_context():
-    db.session.execute(db.text("DROP SCHEMA public CASCADE;"))
-    db.session.execute(db.text("CREATE SCHEMA public;"))
-    db.session.commit()
-    db.create_all()
+def create_app():
+    # ... 上面原本的其他程式碼保持不動 ...
+
+    with app.app_context():
+        db.session.execute(db.text("DROP SCHEMA public CASCADE;"))
+        db.session.execute(db.text("CREATE SCHEMA public;"))
+        db.session.commit()
+        db.create_all()
 
     return app
 
