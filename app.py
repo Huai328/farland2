@@ -56,10 +56,8 @@ def create_app(config_class=Config):
 def create_app():
     # ... 上面原本的其他程式碼保持不動 ...
 
+    # 只要保留原本這兩行（或如果你發現裡面原本是用別的名稱，就維持原本的）
     with app.app_context():
-        db.session.execute(db.text("DROP SCHEMA public CASCADE;"))
-        db.session.execute(db.text("CREATE SCHEMA public;"))
-        db.session.commit()
         db.create_all()
 
     return app
