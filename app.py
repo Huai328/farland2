@@ -26,7 +26,7 @@ def create_app(config_class=Config):
 
     # 初始化 Flask-Admin 自動後台系統
     # 注意：這裡把 url 設定為 /sys-admin，避免與您原本就有的 admin 藍圖網址衝突
-    admin = Admin(app, name='Farland 自動後台管理', template_mode='bootstrap4', url='/sys-admin')
+    admin = Admin(app, name='Farland 自動後台管理', url='/sys-admin')
     
     # 將「角色資料表」註冊進自動後台
     admin.add_view(ModelView(Character, db.session, name='角色數值修改'))
