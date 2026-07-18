@@ -53,19 +53,11 @@ def create_app(config_class=Config):
     )
 
     # 建立資料庫表
-def create_app():
-    # 1. 這裡必須先建立 Flask 實例，名稱一定要叫 app
-    app = Flask(__name__)
-    
-    # ... 這裡保持你原本的 config 設定，例如 app.config.from_object(...) ...
-    # ... 這裡保持你原本的 db.init_app(app) 等初始化設定 ...
-
-    # 2. 自動建表的區塊，這樣寫才對：
     with app.app_context():
         db.create_all()
 
-    # 3. 最後把 app 回傳
     return app
+
 
 
 if __name__ == '__main__':
